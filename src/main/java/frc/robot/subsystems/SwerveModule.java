@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 //CTRE deps
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -10,7 +9,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 //WPILIB deps
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -57,15 +55,12 @@ public class SwerveModule extends SubsystemBase {
   public void setDesiredState(SwerveModuleState desiredState) { 
       //Later, we will create a SwerveModuleState from joystick inputs to use as our desiredState
       // SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngleNormalized())); 
-      SwerveModuleState state = desiredState;   
-      SmartDashboard.putNumber("desired angle", state.angle.getDegrees());    
+      SwerveModuleState state = desiredState;      
        /*We need this value back in sensor units/100ms to command the falcon drive motor Note: I do not know
        why the two doubles below need to have 'final' access modifiers*/
        //final double driveOutput =  state.speedMetersPerSecond / velocityMeters;
        //We are using speedMetersPerSecond as a percent voltage value from -1 to 1 
        double percentVoltage = state.speedMetersPerSecond; 
-       //We need this value back in sensor units to command the falcon steering motor 
-       final double steeringOutput = state.angle.getDegrees(); 
 
       //  final double normalized = getAngleNormalized();
       final double absolute = getAngle();
@@ -77,27 +72,21 @@ public class SwerveModule extends SubsystemBase {
       } else if (delta < -90.0){
         delta += 180.0 ;
         percentVoltage *= -1;
-      }
-      //  final double delta = steeringOutput - normalized;
-      //  final double target = absolute + delta;
-
+      } 
+      
       final double target = AngleToEncoder( absolute + delta );
       
-      if (steeringEncoder.getDeviceID() == 31) { 
-        System.out.printf("Steering %6.2f %6.2f %6.2f", getAngle(), getAngleNormalized(), state.angle.getDegrees());
-      }
-
       //Now we can command the steering motor and drive motor 
-      SmartDashboard.putNumber("output", target);
       if ( percentVoltage != 0 ){
-        steeringMotor.set(ControlMode.Position, target); 
-      }
-      driveMotor.set(ControlMode.PercentOutput, percentVoltage); 
-      /** "Motion Magic" is CTRE (the motor controller manufacturer) "mumbo-jumbo" for a profiled 
+        steeringMotor.set(ControlMode.MotionMagic, target); 
+        /** "Motion Magic" is CTRE (the motor controller manufacturer) "mumbo-jumbo" for a profiled 
        position output. We have found from experiment that motors controlled with this control mode 
       tend to experience less mechanical jerk from sudden changes in acceleration, which the mechanical 
       mentors have informed me is harmful to some rather expensive and difficult to replace parts in 
-      the swerve modules. */  
+      the swerve modules. */ 
+      }
+      driveMotor.set(ControlMode.PercentOutput, percentVoltage); 
+       
   }
   //A getter for the velocity of the drive motor, converted to meters per second.
   public double getVelocityMetersPerSecond(){ 

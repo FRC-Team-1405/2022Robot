@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */ 
   //I think we can use these values as our speedlimit, if we make them configureable on Shuffleboard
-  public static final double maxVelocity = 1.0; //meters per second
+  public static final double maxVelocity = .85; //meters per second
   public static final double maxAngularSpeed = Math.PI; 
   
   /** These variables store the location of each swerve module relative to the center of the robot. 
@@ -81,16 +81,8 @@ public void updateOdometry(){
                                         frontRight.getState(), 
                                         backLeft.getState(), 
                                         backRight.getState());
-  }  
-
-  public void periodic(){ 
-    SmartDashboard.putNumber("FL", frontLeft.getAngleNormalized());
-    SmartDashboard.putNumber("FR", frontRight.getAngleNormalized()); 
-    SmartDashboard.putNumber("BL", backLeft.getAngleNormalized()); 
-    SmartDashboard.putNumber("BR", backRight.getAngleNormalized()); 
   }
 
-  
   public boolean fieldOriented(){ 
     return gyro != null ? true : false;
   }
