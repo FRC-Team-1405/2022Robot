@@ -26,11 +26,11 @@ public class Intake extends SubsystemBase {
   } 
 
   public void dropIntake(){ 
-    intakeDropper.set(ControlMode.MotionMagic, INTAKE_DOWN); 
+    intakeDropper.set(ControlMode.PercentOutput, .35); 
   } 
 
   public void liftIntake(){ 
-    intakeDropper.set(ControlMode.MotionMagic, INTAKE_UP); 
+    intakeDropper.set(ControlMode.PercentOutput, .5); 
   } 
 
 }
