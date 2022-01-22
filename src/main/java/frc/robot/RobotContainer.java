@@ -6,15 +6,18 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
-  private final Shooter shooter = new Shooter();
+  private final Shooter shooter = new Shooter(); 
+  private final Intake intake = new Intake();
   
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController tester = new XboxController(Constants.Controller.TESTER);
@@ -51,7 +54,10 @@ public class RobotContainer {
           .whenReleased( new InstantCommand( shooter::flywheelStop, shooter)) ;
     new JoystickButton(tester, XboxController.Button.kA.value)
           .whenHeld(new InstantCommand( shooter::flywheelLowSpeed, shooter  ))
-          .whenReleased(new InstantCommand( shooter::flywheelStop, shooter));
+          .whenReleased(new InstantCommand( shooter::flywheelStop, shooter)); 
+    new JoystickButton(tester, XboxController.Button.kRightBumper.value)
+          .toggleWhenPressed( new StartEndCommand(intake::dropIntake, intake::liftIntake, intake ));
+
   }
 
   public Command getAutonomousCommand() {

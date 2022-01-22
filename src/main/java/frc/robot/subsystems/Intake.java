@@ -15,8 +15,8 @@ public class Intake extends SubsystemBase {
   public WPI_TalonSRX pickupMotor = new WPI_TalonSRX(Constants.CAN_ID.PICKUP); 
   public WPI_TalonSRX intakeDropper = new WPI_TalonSRX(Constants.CAN_ID.INTAKE_DROPPER); 
 
-  public int INTAKE_UP = 0; 
-  public int INTAKE_DOWN = 1000; 
+  public double INTAKE_UP = -0.5; 
+  public double INTAKE_DOWN = 0.35; 
 
   public Intake() {}
 
@@ -26,11 +26,11 @@ public class Intake extends SubsystemBase {
   } 
 
   public void dropIntake(){ 
-    intakeDropper.set(ControlMode.PercentOutput, .35); 
+    intakeDropper.set(ControlMode.PercentOutput, INTAKE_DOWN); 
   } 
 
   public void liftIntake(){ 
-    intakeDropper.set(ControlMode.PercentOutput, .5); 
+    intakeDropper.set(ControlMode.PercentOutput, INTAKE_UP); 
   } 
 
 }
