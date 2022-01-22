@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
@@ -35,7 +37,20 @@ public class RobotContainer {
   }
 
 
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    configureDriverButtons();
+  }
+
+  private void configureDriverButtons() {
+    new JoystickButton(driver, XboxController.Button.kLeftStick.value)
+        .whenPressed( new InstantCommand( () -> {
+          driveBase.enableFieldOriented(false);
+        }))
+        .whenReleased( new InstantCommand( () -> {
+          driveBase.enableFieldOriented(true);
+        }));
+
+  }
 
   public Command getAutonomousCommand() {
     return null;
