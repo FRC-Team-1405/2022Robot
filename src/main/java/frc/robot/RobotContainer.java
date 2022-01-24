@@ -49,9 +49,9 @@ public class RobotContainer {
   }
 
   private void configureTester() {
-    new JoystickButton(tester, XboxController.Button.kY.value)
-          .whenHeld( new InstantCommand( shooter::flywheelHighSpeed, shooter ))
-          .whenReleased( new InstantCommand( shooter::flywheelStop, shooter)) ;
+    //new JoystickButton(tester, XboxController.Button.kY.value)
+          //.whenHeld( new InstantCommand( shooter::flywheelHighSpeed, shooter ))
+          //.whenReleased( new InstantCommand( shooter::flywheelStop, shooter)) ;
     new JoystickButton(tester, XboxController.Button.kA.value)
           .whenHeld(new InstantCommand( shooter::flywheelLowSpeed, shooter  ))
           .whenReleased(new InstantCommand( shooter::flywheelStop, shooter)); 
