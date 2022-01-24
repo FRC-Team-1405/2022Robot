@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.management.relation.RoleNotFoundException;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -84,7 +86,12 @@ public void updateOdometry(){
   }
 
   public boolean fieldOriented(){ 
-    return gyro != null ? true : false;
+    return (gyro != null && isFieldOrientedEnabled)  ? true : false;
   }
 
+  protected boolean isFieldOrientedEnabled = true;
+  public void enableFieldOriented(boolean value){
+    isFieldOrientedEnabled = value;
+  }
+  // FieldOriented and Gyro control mapped to control stick button on a true/false boolean
 }

@@ -45,21 +45,20 @@ public class RobotContainer {
 
 
   private void configureButtonBindings() {
-    configureTester(); 
     configureDriverButtons();
+    configureShooter(driver);
   }
 
-  private void configureTester() {
-    //new JoystickButton(tester, XboxController.Button.kY.value)
-          //.whenHeld( new InstantCommand( shooter::flywheelHighSpeed, shooter ))
-          //.whenReleased( new InstantCommand( shooter::flywheelStop, shooter)) ;
-    new JoystickButton(tester, XboxController.Button.kA.value)
+  private void configureShooter(XboxController controller){
+    new JoystickButton(controller, XboxController.Button.kY.value)
+          .whenHeld( new InstantCommand( shooter::flywheelHighSpeed, shooter ))
+          .whenReleased( new InstantCommand( shooter::flywheelStop, shooter)) ;
+    new JoystickButton(controller, XboxController.Button.kA.value)
           .whenHeld(new InstantCommand( shooter::flywheelLowSpeed, shooter  ))
           .whenReleased(new InstantCommand( shooter::flywheelStop, shooter)); 
-    new JoystickButton(tester, XboxController.Button.kRightBumper.value)
+    new JoystickButton(controller, XboxController.Button.kRightBumper.value)
           .toggleWhenPressed( new StartEndCommand(intake::intake, intake::intakeStop, intake ));
-
-  } 
+  }   
 
   private void configureDriverButtons() {
     new JoystickButton(driver, XboxController.Button.kLeftStick.value)
