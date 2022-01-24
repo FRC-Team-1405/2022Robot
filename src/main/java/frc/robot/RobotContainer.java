@@ -45,7 +45,8 @@ public class RobotContainer {
 
 
   private void configureButtonBindings() {
-    configureTester();
+    configureTester(); 
+    configureDriverButtons();
   }
 
   private void configureTester() {
@@ -57,6 +58,17 @@ public class RobotContainer {
           .whenReleased(new InstantCommand( shooter::flywheelStop, shooter)); 
     new JoystickButton(tester, XboxController.Button.kRightBumper.value)
           .toggleWhenPressed( new StartEndCommand(intake::intake, intake::intakeStop, intake ));
+
+  } 
+
+  private void configureDriverButtons() {
+    new JoystickButton(driver, XboxController.Button.kLeftStick.value)
+        .whenPressed( new InstantCommand( () -> {
+          driveBase.enableFieldOriented(false);
+        }))
+        .whenReleased( new InstantCommand( () -> {
+          driveBase.enableFieldOriented(true);
+        }));
 
   }
 
