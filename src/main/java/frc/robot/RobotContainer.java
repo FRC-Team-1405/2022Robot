@@ -40,7 +40,7 @@ public class RobotContainer {
   } 
 
   public double getRotationSpeed(){ 
-    return driver.getRightX(); 
+    return -driver.getRightX(); 
   }
 
 
