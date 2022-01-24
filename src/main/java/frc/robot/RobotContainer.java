@@ -56,7 +56,7 @@ public class RobotContainer {
           .whenHeld(new InstantCommand( shooter::flywheelLowSpeed, shooter  ))
           .whenReleased(new InstantCommand( shooter::flywheelStop, shooter)); 
     new JoystickButton(tester, XboxController.Button.kRightBumper.value)
-          .toggleWhenPressed( new StartEndCommand(intake::dropIntake, intake::liftIntake, intake ));
+          .toggleWhenPressed( new StartEndCommand(intake::intake, intake::intakeStop, intake ));
 
   }
 
