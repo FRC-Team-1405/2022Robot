@@ -19,10 +19,11 @@ public class Shooter extends SubsystemBase {
     lowSpeed = Preferences.getInt("Shooter/Speed/Low", lowSpeed);
     Preferences.initInt("Shooter/Speed/High", highSpeed);
     highSpeed = Preferences.getInt("Shooter/Speed/High", highSpeed);
+    Preferences.initInt("Shooter/Spee/Idle", idleSpeed);
   }
-
-  private int lowSpeed = 3000;
-  private int highSpeed = 10000;
+  private int idleSpeed = 20000;
+  private int lowSpeed = 20000;
+  private int highSpeed =30000;
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -38,6 +39,9 @@ public class Shooter extends SubsystemBase {
 
   public void flywheelHighSpeed(){
     flywheelSpeed(highSpeed);
+  }
+  public void flywheelIdleSpeed(){
+    flywheelSpeed(idleSpeed);
   }
 
   private void flywheelSpeed(int speed){
