@@ -5,5 +5,16 @@
 package frc.robot;
 
 public final class Constants {
+    public final class CAN_ID {
+        public final static int FLYWHEEL =  10; 
+        public final static int PICKUP = 5; 
+        public final static int INTAKE_DROPPER = 12;
+    };
+
+    public final class Controller {
+        public final static int DRIVER      = 1;
+        public final static int OPERATOR    = 2;
+        public final static int TESTER      = 3;
+    }
     
 }
