@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import javax.management.relation.RoleNotFoundException;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -47,7 +45,7 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveDriveOdometry odometry = 
           new SwerveDriveOdometry(kinematics, gyro.getRotation2d()); 
 
-  public SwerveDrive() { 
+  public SwerveDrive() {
     //I am making the maxVelocity configurable so we can ajdust our "speedlimit"
     SmartDashboard.putNumber("Speed Limit", maxVelocity); 
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
@@ -75,7 +73,6 @@ public class SwerveDrive extends SubsystemBase {
     frontRight.setDesiredState(swerveModuleStates[1]); 
     backLeft.setDesiredState(swerveModuleStates[2]); 
     backRight.setDesiredState(swerveModuleStates[3]); 
-    
   } 
 
 public void updateOdometry(){ 
@@ -94,4 +91,8 @@ public void updateOdometry(){
     isFieldOrientedEnabled = value;
   }
   // FieldOriented and Gyro control mapped to control stick button on a true/false boolean
+
+  public void setStartLocation(double yPos, double xPos, double rotation) {
+    gyro.setAngleAdjustment(rotation);
+  }
 }
