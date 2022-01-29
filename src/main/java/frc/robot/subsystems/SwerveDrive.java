@@ -89,7 +89,7 @@ public void updateOdometry(){
     return (gyro != null && isFieldOrientedEnabled)  ? true : false;
   }
 
-  protected boolean isFieldOrientedEnabled = true;
+  protected boolean isFieldOrientedEnabled = false;
   public void enableFieldOriented(boolean value){
     isFieldOrientedEnabled = value;
   }

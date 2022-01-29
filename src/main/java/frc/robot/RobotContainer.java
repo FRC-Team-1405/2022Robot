@@ -44,10 +44,10 @@ public class RobotContainer {
   private void configureDriverButtons() {
     new JoystickButton(driver, XboxController.Button.kLeftStick.value)
         .whenPressed( new InstantCommand( () -> {
-          driveBase.enableFieldOriented(false);
+          driveBase.enableFieldOriented(true);
         }))
         .whenReleased( new InstantCommand( () -> {
-          driveBase.enableFieldOriented(true);
+          driveBase.enableFieldOriented(false);
         }));
 
   }
