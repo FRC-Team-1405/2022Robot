@@ -6,17 +6,18 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */ 
@@ -51,7 +52,8 @@ public class SwerveDrive extends SubsystemBase {
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
 
-    Shuffleboard.getTab("Drive Base").add( this );
+    ShuffleboardTab driveTab= Shuffleboard.getTab("Drive Base");
+    driveTab.add( this );
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
