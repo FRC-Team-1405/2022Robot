@@ -5,6 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -27,6 +31,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureButtonBindings();
+    initShuffleBoard();
 
     driveBase.setDefaultCommand(new SwerveDriveCommand(this::getXSpeed, 
                                                        this::getYSpeed, 
@@ -96,7 +101,37 @@ public class RobotContainer {
         .toggleWhenPressed( new StartEndCommand(intake::intake, intake::intakeStop, intake ));
 }
 
+  private SendableChooser<Integer> locationSelector;
+
+  private void initShuffleBoard() {
+    locationSelector = new SendableChooser<Integer>();
+    locationSelector.addOption("None", 0);
+    locationSelector.addOption("Top Left", 1);
+    locationSelector.addOption("Bottom Left", 2);
+    locationSelector.addOption("Top Right", 3);
+    locationSelector.setDefaultOption("Bottom Right", 4);
+
+    Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
+  }
+
+  private boolean hasSetLocation = false;
+
+  public void setStartingLocation() {
+    if(hasSetLocation)
+      return;
+      
+    hasSetLocation = true;
+    switch(locationSelector.getSelected()) {
+      case 0: /* Do Nothing */ break;
+      case 1: driveBase.setStartLocation(1.0, 1.0, 0); break;
+      case 2: driveBase.setStartLocation(1.0, 1.0, 0); break;
+      case 3: driveBase.setStartLocation(1.0, 1.0, 0); break;
+      case 4: driveBase.setStartLocation(1.0, 1.0, 0); break;
+    }
+  }
+
   public Command getAutonomousCommand() {
+    //Set starting position on autonomous Init
     return null;
   }
 }
