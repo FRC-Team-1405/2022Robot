@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.BatteryLED;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.sensor.LEDStrip;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
@@ -28,6 +31,8 @@ public class RobotContainer {
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR);
 
+  private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDS, Constants.PWM_Port.TOTALLEDCOUNT);
+  public final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
 
   public RobotContainer() {
     configureButtonBindings();
@@ -123,7 +128,7 @@ public class RobotContainer {
     hasSetLocation = true;
     switch(locationSelector.getSelected()) {
       case 0: /* Do Nothing */ break;
-      case 1: driveBase.setStartLocation(1.0, 1.0, 0); break;
+      case 1: driveBase.setStartLocation(1.0, 1.0, 90); break;
       case 2: driveBase.setStartLocation(1.0, 1.0, 0); break;
       case 3: driveBase.setStartLocation(1.0, 1.0, 0); break;
       case 4: driveBase.setStartLocation(1.0, 1.0, 0); break;
