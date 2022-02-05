@@ -13,7 +13,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.BatteryLED;
 import frc.robot.commands.FireCommand;
@@ -52,11 +51,11 @@ public class RobotContainer {
                                                        this::getRotationSpeed, driveBase));
   }
 
-  public double getXSpeed(){ 
+  public double getXSpeed() { 
     return driver.getLeftY();
   } 
 
-  public double getYSpeed(){ 
+  public double getYSpeed() { 
     return -driver.getLeftX();
   } 
 

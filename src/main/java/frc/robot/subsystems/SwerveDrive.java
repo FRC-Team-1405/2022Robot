@@ -11,13 +11,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */ 
@@ -32,10 +34,10 @@ public class SwerveDrive extends SubsystemBase {
   private final Translation2d backLeftLocation = new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(-10)); 
   private final Translation2d backRightLocation = new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(10)); 
   //Our swerve modules 
-  private final SwerveModule frontLeft = new SwerveModule(1, 21, 31); 
-  private final SwerveModule frontRight = new SwerveModule(2, 22, 32); 
-  private final SwerveModule backLeft = new SwerveModule(3, 23, 33); 
-  private final SwerveModule backRight = new SwerveModule(4, 24, 34); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.SwerveBase.driveFrontLeft, Constants.SwerveBase.azimuthFrontLeft, Constants.SwerveBase.encoderFrontLeft, 45); 
+  private final SwerveModule frontRight = new SwerveModule(Constants.SwerveBase.driveFrontRight, Constants.SwerveBase.azimuthFrontRight, Constants.SwerveBase.encoderFrontRight, -45); 
+  private final SwerveModule backLeft = new SwerveModule(Constants.SwerveBase.driveBackLeft, Constants.SwerveBase.azimuthBackLeft, Constants.SwerveBase.encoderBackLeft, -45); 
+  private final SwerveModule backRight = new SwerveModule(Constants.SwerveBase.driveBackRight, Constants.SwerveBase.azimuthBackRight, Constants.SwerveBase.encoderBackRight, 45); 
   //Our gyro (used to determine robot heading)
   private final AHRS gyro = new AHRS(SPI.Port.kMXP); 
   
@@ -52,8 +54,21 @@ public class SwerveDrive extends SubsystemBase {
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
 
-    ShuffleboardTab driveTab= Shuffleboard.getTab("Drive Base");
-    driveTab.add( this );
+    ShuffleboardTab driveBase = Shuffleboard.getTab("Drive Base");
+
+    StartEndCommand cmd = new StartEndCommand( () -> {
+                              frontLeft.NormolizeModule(false);
+                              frontRight.NormolizeModule(false);
+                              backLeft.NormolizeModule(false);
+                              backRight.NormolizeModule(false);
+                            }, () -> {
+                              frontLeft.NormolizeModule(true);
+                              frontRight.NormolizeModule(true);
+                              backLeft.NormolizeModule(true);
+                              backRight.NormolizeModule(true);
+                            }, this);
+    cmd.setName("Normalize");
+    driveBase.add("SwerveModules", cmd);
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
