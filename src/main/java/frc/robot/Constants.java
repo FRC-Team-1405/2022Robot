@@ -7,6 +7,7 @@ package frc.robot;
 public final class Constants {
     public final class CAN_ID {
         public final static int FLYWHEEL =  10; 
+        public final static int TRIGGER = 11;
         public final static int PICKUP = 5; 
         public final static int INTAKE_DROPPER = 12;
     };

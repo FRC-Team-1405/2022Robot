@@ -30,13 +30,14 @@ public class SwerveModule extends SubsystemBase {
   private static final double wheelRadius = Units.inchesToMeters(4); 
   private static final double driveMotorEncoderResolution = 2048;  
   //For converting 100 milleseconds (heretofore referred to as 'ms') to seconds 
-  private static final double timeConstantForConversion = 10;
+  private static final double timeConstantForConversion = 10; 
+  private static final double gearatio = 6;
 
   /** A simple conversion formula to turn encoder velocity (sensor units/100ms) to meters per second. 
   To do: add gear reduction to this formula. Our encoder for the drive motor is located above
   the gear reduction for our swerve module. Therefore, the gear reduction of the swerve module must be 
   factored in to our calculation. Currently, it is not. */ 
-  private static final double velocityMeters = wheelRadius * 2 * Math.PI * timeConstantForConversion / driveMotorEncoderResolution;
+  private static final double velocityMeters = wheelRadius * 2 * Math.PI * timeConstantForConversion / driveMotorEncoderResolution / gearatio;
   
   //I feel the constructor is pretty self-explanatory 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID) {
