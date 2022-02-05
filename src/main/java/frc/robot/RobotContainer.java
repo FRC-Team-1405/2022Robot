@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.BatteryLED;
 import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.commands.UltrasonicRead;
 import frc.robot.sensor.LEDStrip;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -33,13 +32,9 @@ public class RobotContainer {
   private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDS, Constants.PWM_Port.TOTALLEDCOUNT);
   public final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
 
-  private UltrasonicRead ultrasonicRead = new UltrasonicRead();
-
   public RobotContainer() {
     configureButtonBindings();
     initShuffleBoard();
-
-    ultrasonicRead.schedule(false);
 
     driveBase.setDefaultCommand(new SwerveDriveCommand(this::getXSpeed, 
                                                        this::getYSpeed, 
