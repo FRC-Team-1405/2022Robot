@@ -27,8 +27,24 @@ public final class Constants {
         public final static int BRIGHTNESS = 100;
     };
 
-    public class PWM_Port{
+    public final class PWM_Port{
         public final static int LEDS = 8;
         public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT;
+    };
+    public final class SwerveBase {
+        public final static int driveFrontLeft = 1;
+        public final static int driveFrontRight = 2;
+        public final static int driveBackLeft = 3;
+        public final static int driveBackRight = 4; 
+
+        public final static int azimuthFrontLeft = 21;
+        public final static int azimuthFrontRight = 22;
+        public final static int azimuthBackLeft = 23;
+        public final static int azimuthBackRight = 24; 
+
+        public final static int encoderFrontLeft = 31;
+        public final static int encoderFrontRight = 32;
+        public final static int encoderBackLeft = 33;
+        public final static int encoderBackRight = 34;
     }
 }
