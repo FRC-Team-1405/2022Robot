@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class SwerveModule extends SubsystemBase {
-  /** Creates a new SwerveModule. */ 
-
   /** A swerve module must have a drive motor and a steering motor. The drive motor gives the power to 
   the wheel of the swerve module, and the steering motor points the wheel in the direction it should 
   go. It can be thought of as a vector, with the steering motor controlling the direction and the 
@@ -47,13 +45,15 @@ public class SwerveModule extends SubsystemBase {
 
   //Tell the wheel to stop controlling the sterring motor
   private boolean isNormalizeWheel = false;
-  
-  //I feel the constructor is pretty self-explanatory 
-  public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID) {
+  private int stopAngle;
 
+  //I feel the constructor is pretty self-explanatory 
+  public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, int stopAngle) {
     driveMotor = new WPI_TalonFX(driveMotorID); 
     steeringMotor = new WPI_TalonFX(steeringMotorID); 
     steeringEncoder = new CANCoder(steeringEncoderID);
+
+    this.stopAngle = stopAngle;
 
     String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotorID);
     Preferences.initDouble(prefKey, offsets[steeringMotorID-ENCODER_BASE]);
@@ -80,7 +80,7 @@ public class SwerveModule extends SubsystemBase {
 
       //  final double normalized = getAngleNormalized();
       final double absolute = getAngle();
-      double delta = AngleDelta( absolute - offsets[steeringMotor.getDeviceID()-ENCODER_BASE], state.angle.getDegrees() );
+      double delta = AngleDelta( absolute - offsets[steeringMotor.getDeviceID()-ENCODER_BASE], percentVoltage != 0 ? state.angle.getDegrees() : stopAngle );
 
       if (delta > 90.0) {
         delta -= 180.0 ;
@@ -93,14 +93,7 @@ public class SwerveModule extends SubsystemBase {
       final double target = AngleToEncoder(absolute + delta);
       
       //Now we can command the steering motor and drive motor 
-      if ( percentVoltage != 0){
-        steeringMotor.set(ControlMode.MotionMagic, target); 
-        /** "Motion Magic" is CTRE (the motor controller manufacturer) "mumbo-jumbo" for a profiled 
-        position output. We have found from experiment that motors controlled with this control mode 
-        tend to experience less mechanical jerk from sudden changes in acceleration, which the mechanical 
-        mentors have informed me is harmful to some rather expensive and difficult to replace parts in 
-        the swerve modules. */ 
-      }
+      steeringMotor.set(ControlMode.MotionMagic, target); 
       driveMotor.set(ControlMode.PercentOutput, percentVoltage); 
        
   }

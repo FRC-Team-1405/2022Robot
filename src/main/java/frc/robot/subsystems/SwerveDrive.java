@@ -34,10 +34,10 @@ public class SwerveDrive extends SubsystemBase {
   private final Translation2d backLeftLocation = new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(-10)); 
   private final Translation2d backRightLocation = new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(10)); 
   //Our swerve modules 
-  private final SwerveModule frontLeft = new SwerveModule(Constants.SwerveBase.driveFrontLeft, Constants.SwerveBase.azimuthFrontLeft, Constants.SwerveBase.encoderFrontLeft); 
-  private final SwerveModule frontRight = new SwerveModule(Constants.SwerveBase.driveFrontRight, Constants.SwerveBase.azimuthFrontRight, Constants.SwerveBase.encoderFrontRight); 
-  private final SwerveModule backLeft = new SwerveModule(Constants.SwerveBase.driveBackLeft, Constants.SwerveBase.azimuthBackLeft, Constants.SwerveBase.encoderBackLeft); 
-  private final SwerveModule backRight = new SwerveModule(Constants.SwerveBase.driveBackRight, Constants.SwerveBase.azimuthBackRight, Constants.SwerveBase.encoderBackRight); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.SwerveBase.driveFrontLeft, Constants.SwerveBase.azimuthFrontLeft, Constants.SwerveBase.encoderFrontLeft, 45); 
+  private final SwerveModule frontRight = new SwerveModule(Constants.SwerveBase.driveFrontRight, Constants.SwerveBase.azimuthFrontRight, Constants.SwerveBase.encoderFrontRight, -45); 
+  private final SwerveModule backLeft = new SwerveModule(Constants.SwerveBase.driveBackLeft, Constants.SwerveBase.azimuthBackLeft, Constants.SwerveBase.encoderBackLeft, -45); 
+  private final SwerveModule backRight = new SwerveModule(Constants.SwerveBase.driveBackRight, Constants.SwerveBase.azimuthBackRight, Constants.SwerveBase.encoderBackRight, 45); 
   //Our gyro (used to determine robot heading)
   private final AHRS gyro = new AHRS(SPI.Port.kMXP); 
   
