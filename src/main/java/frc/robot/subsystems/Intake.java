@@ -40,5 +40,4 @@ public class Intake extends SubsystemBase {
   public void intakeStop(){ 
     pickupMotor.set(ControlMode.PercentOutput, 0.0);
   }
-
 }

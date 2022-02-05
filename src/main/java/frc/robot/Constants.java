@@ -32,19 +32,23 @@ public final class Constants {
         public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT;
     };
     public final class SwerveBase {
-        public final static int driveFrontLeft = 1;
-        public final static int driveFrontRight = 2;
-        public final static int driveBackLeft = 3;
-        public final static int driveBackRight = 4; 
+        public final static int DRIVEFRONTLEFT = 1;
+        public final static int DRIVEFRONTRIGHT = 2;
+        public final static int DRIVEBACKLEFT = 3;
+        public final static int DRIVEBACKRIGHT = 4; 
 
-        public final static int azimuthFrontLeft = 21;
-        public final static int azimuthFrontRight = 22;
-        public final static int azimuthBackLeft = 23;
-        public final static int azimuthBackRight = 24; 
+        public final static int AZIMUTHFRONTLEFT = 21;
+        public final static int AZIMUTHFRONTRIGHT = 22;
+        public final static int AZIMUTHBACKLEFT = 23;
+        public final static int AZIMUTHBACKRIGHT = 24; 
 
-        public final static int encoderFrontLeft = 31;
-        public final static int encoderFrontRight = 32;
-        public final static int encoderBackLeft = 33;
-        public final static int encoderBackRight = 34;
+        public final static int ENCODERFRONTLEFT = 31;
+        public final static int ENCODERFRONTRIGHT = 32;
+        public final static int ENCODERBACKLEFT = 33;
+        public final static int ENCODERBACKRIGHT = 34;
+    }
+
+    public final class Sensors{
+        public final static int ULTRASONICSENSOR = 3;
     }
 }

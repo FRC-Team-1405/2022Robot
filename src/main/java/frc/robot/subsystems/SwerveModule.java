@@ -43,7 +43,7 @@ public class SwerveModule extends SubsystemBase {
   
   // Map ID to offset default values
   private static double[] offsets = {0, 0, 0, 0};
-  private static final int ENCODER_BASE = Constants.SwerveBase.azimuthFrontLeft;
+  private static final int ENCODER_BASE = Constants.SwerveBase.AZIMUTHFRONTLEFT;
 
   //Tell the wheel to stop controlling the sterring motor
   private boolean isNormalizeWheel = false;
