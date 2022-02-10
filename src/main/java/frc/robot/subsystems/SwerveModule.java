@@ -28,17 +28,6 @@ public class SwerveModule extends SubsystemBase {
   //Our external encoder for measuring the turns of the steering motor 
   private final CANCoder steeringEncoder;
 
-  private static final double wheelRadius = Units.inchesToMeters(4); 
-  private static final double driveMotorEncoderResolution = 2048;  
-  //For converting 100 milleseconds (heretofore referred to as 'ms') to seconds 
-  private static final double timeConstantForConversion = 10; 
-  private static final double gearatio = 6;
-
-  /** A simple conversion formula to turn encoder velocity (sensor units/100ms) to meters per second. 
-  To do: add gear reduction to this formula. Our encoder for the drive motor is located above
-  the gear reduction for our swerve module. Therefore, the gear reduction of the swerve module must be 
-  factored in to our calculation. Currently, it is not. */ 
-  private static final double velocityMeters = wheelRadius * 2 * Math.PI * timeConstantForConversion / driveMotorEncoderResolution / gearatio;
   
   // Map ID to offset default values
   private static double[] offsets = {0, 0, 0, 0};
@@ -46,16 +35,13 @@ public class SwerveModule extends SubsystemBase {
 
   //Tell the wheel to stop controlling the sterring motor
   private boolean isNormalizeWheel = false;
-  private int stopAngle;
 
   //I feel the constructor is pretty self-explanatory 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, int stopAngle) {
     driveMotor = new WPI_TalonFX(driveMotorID); 
     steeringMotor = new WPI_TalonFX(steeringMotorID); 
     steeringEncoder = new CANCoder(steeringEncoderID);
-
-    this.stopAngle = stopAngle;
-
+    
     String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotorID);
     Preferences.initDouble(prefKey, offsets[steeringMotorID-ENCODER_BASE]);
     offsets[steeringMotorID-ENCODER_BASE] =  Preferences.getDouble(prefKey, offsets[steeringMotorID-ENCODER_BASE]);
@@ -77,30 +63,35 @@ public class SwerveModule extends SubsystemBase {
        why the two doubles below need to have 'final' access modifiers*/
        //final double driveOutput =  state.speedMetersPerSecond / velocityMeters;
        //We are using speedMetersPerSecond as a percent voltage value from -1 to 1 
-       double percentVoltage = state.speedMetersPerSecond; 
+       double driveSpeed = state.speedMetersPerSecond *Constants.SwerveBase.velocitySensor; 
 
       //  final double normalized = getAngleNormalized();
       final double absolute = getAngle();
-      double delta = AngleDelta( absolute - offsets[steeringMotor.getDeviceID()-ENCODER_BASE], percentVoltage != 0 ? state.angle.getDegrees() : stopAngle );
+      double delta = AngleDelta( absolute - offsets[steeringMotor.getDeviceID()-ENCODER_BASE], state.angle.getDegrees() );
 
       if (delta > 90.0) {
         delta -= 180.0 ;
-        percentVoltage *= -1;
+        driveSpeed *= -1;
       } else if (delta < -90.0){
         delta += 180.0 ;
-        percentVoltage *= -1;
+        driveSpeed *= -1;
       } 
       
       final double target = AngleToEncoder(absolute + delta);
       
       //Now we can command the steering motor and drive motor 
-      steeringMotor.set(ControlMode.MotionMagic, target); 
-      driveMotor.set(ControlMode.PercentOutput, percentVoltage); 
+      if(driveSpeed == 0.0){ 
+        steeringMotor.set(ControlMode.PercentOutput, 0.0);
+        driveMotor.set(ControlMode.PercentOutput, 0.0);   
+      } else {
+        steeringMotor.set(ControlMode.MotionMagic, target); 
+        driveMotor.set(ControlMode.Velocity, driveSpeed);   
+      }
        
   }
   //A getter for the velocity of the drive motor, converted to meters per second.
   public double getVelocityMetersPerSecond(){ 
-    return driveMotor.getSelectedSensorVelocity() * velocityMeters;
+    return driveMotor.getSelectedSensorVelocity() * Constants.SwerveBase.velocityMeters;
   } 
 
   public double getAngle(){ 

@@ -46,6 +46,18 @@ public final class Constants {
         public final static int encoderFrontLeft = 31;
         public final static int encoderFrontRight = 32;
         public final static int encoderBackLeft = 33;
-        public final static int encoderBackRight = 34;
+        public final static int encoderBackRight = 34; 
+
+        public final static double wheelRadius = 0.0508; 
+        public final static double wheelCircumference = wheelRadius * 2 * Math.PI;
+        public final static double driveMotorEncoderResolution = 2048;  
+        //For converting 100 milleseconds (heretofore referred to as 'ms') to seconds 
+        public static final double timeConstantForConversion = 10; 
+        public static final double gearatio = 6;
+
+        //A simple conversion formula to turn encoder velocity (sensor units/100ms) to meters per second 
+        public static final double velocityMeters = 1/driveMotorEncoderResolution * wheelCircumference * 1/gearatio * timeConstantForConversion;
+        // A simple conversion formula to turn meters per second to encoder velocity
+        public static final double velocitySensor = driveMotorEncoderResolution * 1/wheelCircumference * gearatio * 1/timeConstantForConversion;
     }
 }
