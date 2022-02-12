@@ -59,6 +59,8 @@ public class SwerveDrive extends SubsystemBase {
     maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 2) ;
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
+
+    enableFieldOriented(isFieldOrientedEnabled);
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
@@ -97,6 +99,7 @@ public void updateOdometry(){
   protected boolean isFieldOrientedEnabled = true;
   public void enableFieldOriented(boolean value){
     isFieldOrientedEnabled = value;
+    SmartDashboard.putBoolean("Drive by Field Oriented", isFieldOrientedEnabled);
   }
   // FieldOriented and Gyro control mapped to control stick button on a true/false boolean
 
