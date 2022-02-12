@@ -10,8 +10,9 @@ import com.ctre.phoenix.sensors.CANCoder;
 //WPILIB deps
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -33,8 +34,46 @@ public class SwerveModule extends SubsystemBase {
   private static double[] offsets = {0, 0, 0, 0};
   private static final int ENCODER_BASE = Constants.SwerveBase.azimuthFrontLeft;
 
+  // The state machine has 3 states:
+  // BootState  check the SwerveDrive/Normalize then Normalize or Boot
+  // Normalize  normalize the wheels then move to ready
+  // Ready      the motors are ready to command
+  private enum NormalizeWheels {    
+    // This state can only be set by restarting the robot code.
+    BootState{
+      public NormalizeWheels execute(SwerveModule module) {
+        if (SmartDashboard.getBoolean("SwervDrive/Normalize", false))
+          return Normalize;
+
+        return Ready;
+      };
+    },
+    // This state is entered only after boot when SwerveDrive/Normalize is true
+    Normalize{
+      public NormalizeWheels execute(SwerveModule module) {
+        module.NormolizeModule();
+        SmartDashboard.putBoolean("SwervDrive/Normalize", false);
+        return Ready;
+      };
+    },
+    // This state is entered after normaizing or after boot if SwerveDrive/Normalize is false
+    Ready{
+      public NormalizeWheels execute(SwerveModule module){
+        return this;
+      };
+    };
+    public abstract NormalizeWheels execute(SwerveModule module);
+
+    static {
+      if (!SmartDashboard.containsKey("SwervDrive/Normalize"))
+        SmartDashboard.putBoolean("SwervDrive/Normalize", false);
+    };
+  };
+
   //Tell the wheel to stop controlling the sterring motor
-  private boolean isNormalizeWheel = false;
+  private NormalizeWheels normalizeWheels = NormalizeWheels.BootState;
+
+
 
   //I feel the constructor is pretty self-explanatory 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, int stopAngle) {
@@ -54,8 +93,10 @@ public class SwerveModule extends SubsystemBase {
   /** Allows us to command the swervemodule to any given veloctiy and angle, ultimately coming from our
   joystick inputs. */
   public void setDesiredState(SwerveModuleState desiredState) {
-      if(isNormalizeWheel)
-        return; 
+      normalizeWheels = normalizeWheels.execute(this);
+      if (normalizeWheels != NormalizeWheels.Ready)
+        return;
+
       //Later, we will create a SwerveModuleState from joystick inputs to use as our desiredState
       // SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngleNormalized())); 
       SwerveModuleState state = desiredState;      
@@ -120,15 +161,9 @@ public class SwerveModule extends SubsystemBase {
         return Math.IEEEremainder(deltaNeg,360);
   }
 
-  public void NormolizeModule(boolean isFinished) {
-    isNormalizeWheel = !isFinished;
-    steeringMotor.set(ControlMode.PercentOutput, 0);
-
+  public void NormolizeModule() {
     offsets[steeringMotor.getDeviceID()-ENCODER_BASE] = getAngle();
-
-    if(isFinished) {
-      String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotor.getDeviceID());
-      Preferences.setDouble(prefKey, offsets[steeringMotor.getDeviceID()-ENCODER_BASE]);
-    }
+    String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotor.getDeviceID());
+    Preferences.setDouble(prefKey, offsets[steeringMotor.getDeviceID()-ENCODER_BASE]);
   }
 }

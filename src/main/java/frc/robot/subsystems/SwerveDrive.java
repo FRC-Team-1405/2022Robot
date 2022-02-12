@@ -49,6 +49,8 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveDriveOdometry odometry = 
           new SwerveDriveOdometry(kinematics, gyro.getRotation2d()); 
 
+
+
   public SwerveDrive() {
     //I am making the maxVelocity configurable so we can ajdust our "speedlimit"
     Preferences.initDouble("SwerveDrive/Speed Limit", 3); 
@@ -57,22 +59,6 @@ public class SwerveDrive extends SubsystemBase {
     maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 2) ;
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
-
-    ShuffleboardTab driveBase = Shuffleboard.getTab("Drive Base");
-
-    StartEndCommand cmd = new StartEndCommand( () -> {
-                              frontLeft.NormolizeModule(false);
-                              frontRight.NormolizeModule(false);
-                              backLeft.NormolizeModule(false);
-                              backRight.NormolizeModule(false);
-                            }, () -> {
-                              frontLeft.NormolizeModule(true);
-                              frontRight.NormolizeModule(true);
-                              backLeft.NormolizeModule(true);
-                              backRight.NormolizeModule(true);
-                            }, this);
-    cmd.setName("Normalize");
-    driveBase.add("SwerveModules", cmd);
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
