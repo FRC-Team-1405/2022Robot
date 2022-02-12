@@ -13,6 +13,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.BatteryLED;
@@ -124,11 +125,11 @@ public class RobotContainer {
 
   private void initShuffleBoard() {
     locationSelector = new SendableChooser<Integer>();
-    locationSelector.addOption("None", 0);
+    locationSelector.setDefaultOption("None", 0);
     locationSelector.addOption("Top Left", 1);
     locationSelector.addOption("Bottom Left", 2);
     locationSelector.addOption("Top Right", 3);
-    locationSelector.setDefaultOption("Bottom Right", 4);
+    locationSelector.addOption("Bottom Right", 4);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
@@ -154,9 +155,9 @@ public class RobotContainer {
     switch(locationSelector.getSelected()) {
       case 0: /* Do Nothing */ break;
       case 1: driveBase.setStartLocation(1.0, 1.0, 90); break;
-      case 2: driveBase.setStartLocation(1.0, 1.0, 0); break;
-      case 3: driveBase.setStartLocation(1.0, 1.0, 0); break;
-      case 4: driveBase.setStartLocation(1.0, 1.0, 0); break;
+      case 2: driveBase.setStartLocation(1.0, 1.0, 45); break;
+      case 3: driveBase.setStartLocation(1.0, 1.0, 180); break;
+      case 4: driveBase.setStartLocation(1.0, 1.0, -90); break;
     }
   } 
 
