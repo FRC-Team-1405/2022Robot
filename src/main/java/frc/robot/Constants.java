@@ -59,5 +59,10 @@ public final class Constants {
         public static final double velocityMeters = 1/driveMotorEncoderResolution * wheelCircumference * 1/gearatio * timeConstantForConversion;
         // A simple conversion formula to turn meters per second to encoder velocity
         public static final double velocitySensor = driveMotorEncoderResolution * 1/wheelCircumference * gearatio * 1/timeConstantForConversion;
+    
+        public static final double maxAngularSpeed = 1; 
+        public static final double maxAngularAccelerartion = 1; 
+    
+    
     }
 }

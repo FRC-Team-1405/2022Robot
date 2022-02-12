@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -30,10 +31,10 @@ public class SwerveDrive extends SubsystemBase {
   
   /** These variables store the location of each swerve module relative to the center of the robot. 
   Currently, I am just copying the ones from the example code. */
-  private final Translation2d frontLeftLocation = new Translation2d(Units.inchesToMeters(12), Units.inchesToMeters(-10)); 
-  private final Translation2d frontRightLocation = new Translation2d(Units.inchesToMeters(12), Units.inchesToMeters(10)); 
-  private final Translation2d backLeftLocation = new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(-10)); 
-  private final Translation2d backRightLocation = new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(10)); 
+  private final Translation2d frontLeftLocation = new Translation2d(Units.inchesToMeters(13), Units.inchesToMeters(-13)); 
+  private final Translation2d frontRightLocation = new Translation2d(Units.inchesToMeters(13), Units.inchesToMeters(13)); 
+  private final Translation2d backLeftLocation = new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(-13)); 
+  private final Translation2d backRightLocation = new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(13)); 
   //Our swerve modules 
   private final SwerveModule frontLeft = new SwerveModule(Constants.SwerveBase.driveFrontLeft, Constants.SwerveBase.azimuthFrontLeft, Constants.SwerveBase.encoderFrontLeft, 45); 
   private final SwerveModule frontRight = new SwerveModule(Constants.SwerveBase.driveFrontRight, Constants.SwerveBase.azimuthFrontRight, Constants.SwerveBase.encoderFrontRight, -45); 
@@ -79,10 +80,7 @@ public class SwerveDrive extends SubsystemBase {
 
     SmartDashboard.putNumber("angle", gyro.getAngle()); 
     
-    frontLeft.setDesiredState(swerveModuleStates[0]); 
-    frontRight.setDesiredState(swerveModuleStates[1]); 
-    backLeft.setDesiredState(swerveModuleStates[2]); 
-    backRight.setDesiredState(swerveModuleStates[3]); 
+    setModuleStates(swerveModuleStates);
   } 
 
 public void updateOdometry(){ 
@@ -105,5 +103,20 @@ public void updateOdometry(){
 
   public void setStartLocation(double yPos, double xPos, double rotation) {
     gyro.setAngleAdjustment(rotation);
+  } 
+
+  public Pose2d getPose(){ 
+    return odometry.getPoseMeters(); 
+  } 
+  
+  public SwerveDriveKinematics getKinematics(){ 
+    return kinematics; 
+  }
+
+  public void setModuleStates(SwerveModuleState[] states){ 
+    frontLeft.setDesiredState(states[0]);
+    frontRight.setDesiredState(states[1]); 
+    backLeft.setDesiredState(states[2]);
+    backRight.setDesiredState(states[3]);
   }
 }
