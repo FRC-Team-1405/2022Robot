@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.BatteryLED;
+import frc.robot.commands.FireCargo;
+import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.FireCommand;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.AutoFireCargo.Goal;
@@ -107,12 +109,12 @@ public class RobotContainer {
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
   new JoystickButton(driver, XboxController.Button.kY.value)
-        .whenHeld( new InstantCommand(shooter::flywheelHighSpeed, shooter ))
-        .whenReleased( new InstantCommand(shooter::flywheelStop, shooter)) ;
+        .whenHeld(new FireCargo(shooter, FireCargo.Goal.High) )
+        .whenReleased( new FireCargoStop(shooter));
 
   new JoystickButton(driver, XboxController.Button.kA.value)
-        .whenHeld(new InstantCommand(shooter::flywheelLowSpeed, shooter  ))
-        .whenReleased(new InstantCommand(shooter::flywheelStop, shooter)); 
+        .whenHeld(new FireCargo(shooter, FireCargo.Goal.Low))
+        .whenReleased(new FireCargoStop(shooter)); 
   
   
 
