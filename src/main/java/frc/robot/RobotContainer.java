@@ -110,11 +110,11 @@ public class RobotContainer {
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
   new JoystickButton(driver, XboxController.Button.kY.value)
-        .whenHeld(new FireCargo(shooter, FireCargo.Goal.High) )
+        .whileHeld( new FireCargo(shooter, FireCargo.Goal.High) )
         .whenReleased( new FireCargoStop(shooter));
 
   new JoystickButton(driver, XboxController.Button.kA.value)
-        .whenHeld(new FireCargo(shooter, FireCargo.Goal.Low))
+        .whileHeld( new FireCargo(shooter, FireCargo.Goal.Low) )
         .whenReleased(new FireCargoStop(shooter)); 
   
   

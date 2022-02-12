@@ -33,11 +33,13 @@ public class FireCargo extends SequentialCommandGroup {
          () -> { return goal == Goal.Low; } ),
       
       // wait for the flywyeel to get up to speed
-      new WaitUntilCommand( shooter::flyWheelReady )
-        .andThen(
-               new RunCommand( shooter::triggerFire, shooter)
-                  .withInterrupt( () -> { return !shooter.flyWheelReady(); })
-         ).perpetually()
+      new WaitUntilCommand( shooter::flyWheelReady ),
+
+      // fire until flywheel speed drops
+      new RunCommand( shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+
+      // stop the trigger
+      new InstantCommand( shooter::triggerStop )
     );
   }
   public class StopFire extends CommandBase{
