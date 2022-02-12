@@ -20,6 +20,7 @@ import frc.robot.commands.BatteryLED;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.FireCommand;
+import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.sensor.LEDStrip;
@@ -120,7 +121,7 @@ public class RobotContainer {
   
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .toggleWhenPressed( new StartEndCommand(intake::intake, intake::intakeStop, intake ));
+        .toggleWhenPressed( new IntakeCargo(intake) );
 
 }
 
