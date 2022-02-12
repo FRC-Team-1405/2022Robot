@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Shooter;
 
 public class AutoFireCargo extends SequentialCommandGroup {
-  enum Goal {
+  public enum Goal {
     Low,
     High
   }
@@ -35,7 +35,7 @@ public class AutoFireCargo extends SequentialCommandGroup {
       new WaitUntilCommand( shooter::flyWheelReady ),
 
       // fire for 1 second
-      new RunCommand( shooter::triggerFire, shooter ).withTimeout(1),
+      new RunCommand( shooter::triggerFire, shooter ).withTimeout(3),
 
       // stop trigger and flywheel
       new InstantCommand( () -> {
