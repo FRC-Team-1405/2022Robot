@@ -100,12 +100,14 @@ public class RobotContainer {
   }   
 
   private void configureDriverButtons() {
-    new JoystickButton(driver, XboxController.Button.kLeftStick.value)
-        .whenPressed( new InstantCommand( () -> { driveBase.enableFieldOriented(true); }))
-        .whenReleased( new InstantCommand( () -> { driveBase.enableFieldOriented(false); }));
+    new JoystickButton(driver, XboxController.Button.kBack.value)
+      .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(true); }));
+
+    new JoystickButton(driver, XboxController.Button.kStart.value)
+      .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
   new JoystickButton(driver, XboxController.Button.kY.value)
-  .whenHeld( new InstantCommand(shooter::flywheelHighSpeed, shooter ))
+        .whenHeld( new InstantCommand(shooter::flywheelHighSpeed, shooter ))
         .whenReleased( new InstantCommand(shooter::flywheelStop, shooter)) ;
 
   new JoystickButton(driver, XboxController.Button.kA.value)
