@@ -96,7 +96,7 @@ public void updateOdometry(){
     return (gyro != null && isFieldOrientedEnabled)  ? true : false;
   }
 
-  protected boolean isFieldOrientedEnabled = false;
+  protected boolean isFieldOrientedEnabled = true;
   public void enableFieldOriented(boolean value){
     isFieldOrientedEnabled = value;
     SmartDashboard.putBoolean("Drive by Field Oriented", isFieldOrientedEnabled);
