@@ -35,6 +35,8 @@ public enum FeatureToggle {
         this.enabled = Preferences.getBoolean(key, false);
     }
     private FeatureToggle(int digitalChannel){
-        this.enabled = new DigitalInput(digitalChannel).get() ? true : false;
+        DigitalInput input = new DigitalInput(digitalChannel);
+        this.enabled = input.get() ? true : false;
+        input.close();
     }
 }     

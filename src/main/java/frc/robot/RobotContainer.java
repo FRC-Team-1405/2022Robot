@@ -6,36 +6,30 @@ package frc.robot;
 
 import java.util.Map;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoFireCargo;
+import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.BatteryLED;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.FireCommand;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.sensor.LEDStrip;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
@@ -57,16 +51,37 @@ public class RobotContainer {
                                                        this::getRotationSpeed, driveBase));
   }
 
-  public double getXSpeed() { 
-    return driver.getLeftY();
+  public double getXSpeed(){ 
+    double finalX;
+    if (Math.abs(driver.getLeftY()) <= 0.1)
+      finalX = 0.0;
+    else
+      finalX = driver.getLeftY() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
+    
+    SmartDashboard.putNumber("xSpeed", finalX);
+    return finalX;
   } 
 
-  public double getYSpeed() { 
-    return -driver.getLeftX();
+  public double getYSpeed(){ 
+    double finalY;
+    if (Math.abs(driver.getLeftX()) <= 0.1)
+      finalY = 0.0;
+    else
+      finalY = driver.getLeftX() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
+    
+    SmartDashboard.putNumber("ySpeed", finalY);
+    return finalY;
   } 
 
   public double getRotationSpeed(){ 
-    return -driver.getRightX(); 
+    double finalRotation;
+    if (Math.abs(driver.getRightX()) <= 0.1)
+      finalRotation = 0.0;
+    else
+      finalRotation = driver.getRightX() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
+
+    SmartDashboard.putNumber("rotationSpeed", finalRotation);
+    return finalRotation;
   }
 
 
