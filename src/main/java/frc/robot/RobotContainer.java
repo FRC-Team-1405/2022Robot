@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.BatteryLED;
 import frc.robot.commands.FireCommand;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.sensor.LEDStrip;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -131,8 +133,9 @@ public class RobotContainer {
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
     autoSelector = new SendableChooser<Integer>();
-    autoSelector.addOption("Do Nothing", 0); 
+    autoSelector.setDefaultOption("Do Nothing", 0); 
     autoSelector.addOption("Shoot Only", 1); 
+    autoSelector.addOption("Shoot Only Refactor", 2);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -170,12 +173,17 @@ public class RobotContainer {
     return new FireCommand(shooter);
   } 
 
+  private Command autoFireCargo(){ 
+    return new AutoFireCargo(shooter, Goal.High);
+  }
+
   private final Command selectCommand =
   new SelectCommand(
       // Maps selector values to commands
       Map.ofEntries(
           Map.entry(0, new PrintCommand("Do nothing")),
-          Map.entry(1, shootOnlyAuto())
+          Map.entry(1, shootOnlyAuto()), 
+          Map.entry(2, autoFireCargo())
        ),
       this::autoSelect
   );
