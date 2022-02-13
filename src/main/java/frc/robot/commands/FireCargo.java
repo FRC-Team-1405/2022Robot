@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.time.Instant;
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,13 +16,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Shooter;
 
-public class AutoFireCargo extends SequentialCommandGroup {
+public class FireCargo extends SequentialCommandGroup {
   public enum Goal {
     Low,
     High
   }
   /** Creates a new FireCargo. */
-  public AutoFireCargo(Shooter shooter, Goal goal) {
+  public FireCargo(Shooter shooter, Goal goal) {
     setName("FireCargo");
 
     addCommands(
@@ -34,15 +35,15 @@ public class AutoFireCargo extends SequentialCommandGroup {
       // wait for the flywyeel to get up to speed
       new WaitUntilCommand( shooter::flyWheelReady ),
 
-      // fire for 1 second
-      new RunCommand( shooter::triggerFire, shooter ).withTimeout(3),
+      // fire until flywheel speed drops
+      new RunCommand( shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
 
-      // stop trigger and flywheel
-      new InstantCommand( () -> {
-          shooter.triggerStop();
-          shooter.flywheelStop();
-        },
-        shooter)
+      // stop the trigger
+      new InstantCommand( shooter::triggerStop )
     );
+  }
+  public class StopFire extends CommandBase{
+    
+
   }
 }
