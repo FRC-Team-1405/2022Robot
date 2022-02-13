@@ -19,6 +19,7 @@ public class BatteryLED extends CommandBase {
   public BatteryLED(LEDStrip ledStrip) {
     this.ledStrip = ledStrip;
     this.addressableLEDBuffer = ledStrip.getLedBuffer() ;
+    setName("BatteryLED");
   }
 
   @Override

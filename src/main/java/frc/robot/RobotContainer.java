@@ -14,10 +14,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.commands.BatteryLED;
 import frc.robot.commands.FireCommand;
 import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.sensor.LEDStrip;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
@@ -38,9 +36,6 @@ public class RobotContainer {
   
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR);
-
-  private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDS, Constants.PWM_Port.TOTALLEDCOUNT);
-  public final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
 
   public RobotContainer() {
     configureButtonBindings();
@@ -122,16 +117,16 @@ public class RobotContainer {
 
   private void initShuffleBoard() {
     locationSelector = new SendableChooser<Integer>();
-    locationSelector.addOption("None", 0);
+    locationSelector.setDefaultOption("None", 0);
     locationSelector.addOption("Top Left", 1);
     locationSelector.addOption("Bottom Left", 2);
     locationSelector.addOption("Top Right", 3);
-    locationSelector.setDefaultOption("Bottom Right", 4);
+    locationSelector.addOption("Bottom Right", 4);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
     autoSelector = new SendableChooser<Integer>();
-    autoSelector.addOption("Do Nothing", 0); 
+    autoSelector.setDefaultOption("Do Nothing", 0); 
     autoSelector.addOption("Shoot Only", 1); 
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);

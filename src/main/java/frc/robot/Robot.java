@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.BatteryLED;
+import frc.robot.sensor.LEDStrip;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,6 +20,10 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDS, Constants.PWM_Port.TOTALLEDCOUNT);
+  private final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -56,7 +62,7 @@ public class Robot extends TimedRobot {
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
-  public void autonomousInit() {
+  public void autonomousInit() {    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     m_robotContainer.setStartingLocation();
 
@@ -64,6 +70,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    if (!batteryMonitor.isScheduled())
+      batteryMonitor.schedule(false);
   }
 
   /** This function is called periodically during autonomous. */
@@ -76,11 +85,13 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    //m_robotContainer.batteryMonitor.schedule(false);
     m_robotContainer.setStartingLocation();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    if (!batteryMonitor.isScheduled())
+      batteryMonitor.schedule(false);
   }
 
   /** This function is called periodically during operator control. */
