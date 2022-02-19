@@ -181,15 +181,6 @@ public class RobotContainer {
     }
   } 
 
-//  // private Command runTrajectory(Trajectory trajectoryToRun){ 
-//     var thetaController = new ProfiledPIDController(
-//       0, 0, 0, 
-//       new TrapezoidProfile.Constraints(0, 0)); 
-//       thetaController.enableContinuousInput(-Math.PI, Math.PI); 
-
-    //SwerveControllerCommand swerveCommand = new SwerveControllerCommand(trajectoryToRun, pose, driveBase, xController, yController, thetaController, outputModuleStates, requirements)
-//  } 
-
   private Command shootOnlyAuto(){
     return new FireCommand(shooter);
   } 

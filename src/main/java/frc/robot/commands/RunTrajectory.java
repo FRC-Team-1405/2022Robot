@@ -14,7 +14,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
 
 /** Add your docs here. */
-public class RunTrajectory extends SequentialCommandGroup {
+public class RunTrajectory extends SequentialCommandGroup{
 
     ProfiledPIDController thetaController =
     new ProfiledPIDController(
@@ -31,7 +31,7 @@ public RunTrajectory(Trajectory trajectory, SwerveDrive swerveDrive){
     new SwerveControllerCommand(
         trajectory,
         swerveDrive::getPose, // Functional interface to feed supplier
-        swerveDrive.getKinematics(),
+        Constants.SwerveBase.kinematics,
 
         // Position controllers
         new PIDController(0, 0, 0),  
@@ -40,6 +40,8 @@ public RunTrajectory(Trajectory trajectory, SwerveDrive swerveDrive){
         thetaController,
         swerveDrive::setModuleStates,
         swerveDrive); 
+
+    addCommands(swerveControllerCommand);
 }
 
 }

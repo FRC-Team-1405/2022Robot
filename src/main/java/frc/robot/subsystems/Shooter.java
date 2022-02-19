@@ -33,13 +33,13 @@ public class Shooter extends SubsystemBase {
     setLowIndex(speedLowIndex);
     setHighIndex(speedHighIndex);
   }
-  private double triggerSpeed = 0.3;
+  private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
   private int speedLowIndex = 0;
   private int speedHighIndex = 0;
   private int adjustSpeed = 2500;
-  private int idleSpeed = 2000;
-  private int lowSpeed = 3000;
-  private int highSpeed = 5000;
+  private int idleSpeed = -20000;
+  private int lowSpeed = -20000;
+  private int highSpeed = -30000;
 
   @Override
   public void periodic() {
