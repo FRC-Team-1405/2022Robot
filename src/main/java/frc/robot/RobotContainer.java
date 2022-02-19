@@ -23,7 +23,9 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.SwerveBase;
 import frc.robot.commands.AutoFireCargo;
+import frc.robot.commands.FireAndBackUp;
 import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
@@ -60,7 +62,7 @@ public class RobotContainer {
       finalX = driver.getLeftY() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
     
     SmartDashboard.putNumber("xSpeed", finalX);
-    return finalX;
+    return -finalX;
   } 
 
   public double getYSpeed(){ 
@@ -79,7 +81,7 @@ public class RobotContainer {
     if (Math.abs(driver.getRightX()) <= 0.1)
       finalRotation = 0.0;
     else
-      finalRotation = driver.getRightX() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
+      finalRotation = driver.getRightX() * 0.5 * (1.0 + driver.getRightTriggerAxis());
 
     SmartDashboard.putNumber("rotationSpeed", finalRotation);
     return finalRotation;
@@ -96,7 +98,7 @@ public class RobotContainer {
     var idleCommand = new InstantCommand( shooter::flywheelIdleSpeed);
     var toggleIdleCommand = new ConditionalCommand( idleCommand, stopCommand, shooter::isStopped);
 
-    new JoystickButton(driver, XboxController.Button.kB.value).whenPressed( toggleIdleCommand );
+    new JoystickButton(operator, XboxController.Button.kB.value).whenPressed( toggleIdleCommand );
 
     var upTrigger = new Trigger( () -> {
       return operator.getPOV() == 0 || operator.getPOV() == 45 || operator.getPOV() == 315;
@@ -137,7 +139,7 @@ public class RobotContainer {
   
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .toggleWhenPressed( new IntakeCargo(intake) );
+        .whileHeld(new IntakeCargo(intake));
 
 }
 
@@ -157,7 +159,8 @@ public class RobotContainer {
     autoSelector = new SendableChooser<Integer>();
     autoSelector.setDefaultOption("Do Nothing", 0); 
     autoSelector.addOption("Shoot Only", 1); 
-    autoSelector.addOption("Shoot Only Refactor", 2);
+    autoSelector.addOption("Shoot Only Refactor", 2); 
+    autoSelector.addOption("Shoot and Back Up", 3);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -180,37 +183,28 @@ public class RobotContainer {
       case 3: driveBase.setStartLocation(1.0, 1.0, 180); break;
       case 4: driveBase.setStartLocation(1.0, 1.0, -90); break;
     }
+
   } 
-
-//  // private Command runTrajectory(Trajectory trajectoryToRun){ 
-//     var thetaController = new ProfiledPIDController(
-//       0, 0, 0, 
-//       new TrapezoidProfile.Constraints(0, 0)); 
-//       thetaController.enableContinuousInput(-Math.PI, Math.PI); 
-
-    //SwerveControllerCommand swerveCommand = new SwerveControllerCommand(trajectoryToRun, pose, driveBase, xController, yController, thetaController, outputModuleStates, requirements)
-//  } 
-
-  private Command shootOnlyAuto(){
-    return new FireCommand(shooter);
-  } 
-
-  private Command autoFireCargo(){ 
-    return new AutoFireCargo(shooter, Goal.High);
-  }
 
   private final Command selectCommand =
   new SelectCommand(
       // Maps selector values to commands
       Map.ofEntries(
           Map.entry(0, new PrintCommand("Do nothing")),
-          Map.entry(1, shootOnlyAuto()), 
-          Map.entry(2, autoFireCargo())
+          Map.entry(1, new FireCommand(shooter)), 
+          Map.entry(2, new AutoFireCargo(shooter, Goal.High)), 
+          Map.entry(3, new FireAndBackUp(driveBase, shooter, Goal.Low))
        ),
       this::autoSelect
   );
 
     public Command getAutonomousCommand() {
+      switch (autoSelect()){
+        case 0: return new PrintCommand("Do nothing");
+        case 1: return new FireCommand(shooter); 
+        case 2: return new AutoFireCargo(shooter, Goal.High); 
+        case 3: return new FireAndBackUp(driveBase, shooter, Goal.Low);
+      }
       // return autoCommand;
       return selectCommand;
     } 

@@ -28,13 +28,7 @@ public class SwerveDrive extends SubsystemBase {
   //I think we can use these values as our speedlimit, if we make them configureable on Shuffleboard 
   public static double maxVelocity; 
   public static double maxAngularSpeed; 
-  
-  /** These variables store the location of each swerve module relative to the center of the robot. 
-  Currently, I am just copying the ones from the example code. */
-  private final Translation2d frontLeftLocation = new Translation2d(Units.inchesToMeters(13), Units.inchesToMeters(-13)); 
-  private final Translation2d frontRightLocation = new Translation2d(Units.inchesToMeters(13), Units.inchesToMeters(13)); 
-  private final Translation2d backLeftLocation = new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(-13)); 
-  private final Translation2d backRightLocation = new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(13)); 
+   
   //Our swerve modules 
   private final SwerveModule frontLeft = new SwerveModule(Constants.SwerveBase.driveFrontLeft, Constants.SwerveBase.azimuthFrontLeft, Constants.SwerveBase.encoderFrontLeft, 45); 
   private final SwerveModule frontRight = new SwerveModule(Constants.SwerveBase.driveFrontRight, Constants.SwerveBase.azimuthFrontRight, Constants.SwerveBase.encoderFrontRight, -45); 
@@ -42,15 +36,11 @@ public class SwerveDrive extends SubsystemBase {
   private final SwerveModule backRight = new SwerveModule(Constants.SwerveBase.driveBackRight, Constants.SwerveBase.azimuthBackRight, Constants.SwerveBase.encoderBackRight, 45); 
   //Our gyro (used to determine robot heading)
   private final AHRS gyro = new AHRS(SPI.Port.kMXP); 
+
   
-  private final SwerveDriveKinematics kinematics = 
-          new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, 
-          backLeftLocation, backRightLocation);
 
   private final SwerveDriveOdometry odometry = 
-          new SwerveDriveOdometry(kinematics, gyro.getRotation2d()); 
-
-
+          new SwerveDriveOdometry(Constants.SwerveBase.kinematics, gyro.getRotation2d()); 
 
   public SwerveDrive() {
     //I am making the maxVelocity configurable so we can ajdust our "speedlimit"
@@ -65,7 +55,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
-    SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(
+    SwerveModuleState[] swerveModuleStates = Constants.SwerveBase.kinematics.toSwerveModuleStates(
       fieldOriented() 
       ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed * maxVelocity, 
                                               ySpeed * maxVelocity, 
@@ -108,10 +98,6 @@ public void updateOdometry(){
   public Pose2d getPose(){ 
     return odometry.getPoseMeters(); 
   } 
-  
-  public SwerveDriveKinematics getKinematics(){ 
-    return kinematics; 
-  }
 
   public void setModuleStates(SwerveModuleState[] states){ 
     frontLeft.setDesiredState(states[0]);

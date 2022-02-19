@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
+
 public final class Constants {
     public final class CANID {
         public final static int FLYWHEEL =  10; 
@@ -39,7 +43,10 @@ public final class Constants {
         public final static int LEDPORT = 8;
         public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT + UnderGlow.LEDCOUNT;
     };
-    public final class SwerveBase {
+    public final class Sensors{
+        public final static int ULTRASONICSENSOR = 3;
+    }
+    public final static class SwerveBase {
         public final static int driveFrontLeft = 1;
         public final static int driveFrontRight = 2;
         public final static int driveBackLeft = 3;
@@ -69,5 +76,18 @@ public final class Constants {
     
         public static final double maxAngularSpeed = 1; 
         public static final double maxAngularAccelerartion = 1; 
+    
+        public static final SwerveDriveKinematics kinematics = 
+                new SwerveDriveKinematics(
+                    new Translation2d(Units.inchesToMeters(13),  Units.inchesToMeters(-13)),    // Front Left
+                    new Translation2d(Units.inchesToMeters(13),  Units.inchesToMeters(13)),     //Front Right
+                    new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(-13)),    //Back Left
+                    new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(13)));    //Back Right
+      
+    
+     } 
+
+     public final class Shooter{ 
+        public final static double INDEX_SPEED = .75; 
     }
 }
