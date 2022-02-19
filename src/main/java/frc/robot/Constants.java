@@ -5,7 +5,7 @@
 package frc.robot;
 
 public final class Constants {
-    public final class CAN_ID {
+    public final class CANID {
         public final static int FLYWHEEL =  10; 
         public final static int TRIGGER = 11;
         public final static int PICKUP = 5; 
@@ -34,12 +34,21 @@ public final class Constants {
         public final static int YELLOWSTART = SEGMENTLENGTH;
         public final static int GREENSTART = SEGMENTLENGTH * 2;
 
-        public final static double BRIGHTNESS = 0.25;
+        public final static double BRIGHTNESS = 0.2;
     };
 
-    public final class PWM_Port{
+    public class UnderGlow{
+        //The under glow has 43 leds
+        public final static int LEDSTART = 30;
+        public final static int LEDSTOP = 42;
+        public final static int LEDCOUNT = LEDSTOP - LEDSTART;
+
+        public final static double BRIGHTNESS = 0.2;
+    }
+    
+    public final class PWMPort{
         public final static int LEDPORT = 8;
-        public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT;
+        public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT + UnderGlow.LEDCOUNT;
     };
     public final class SwerveBase {
         public final static int driveFrontLeft = 1;
@@ -71,7 +80,5 @@ public final class Constants {
     
         public static final double maxAngularSpeed = 1; 
         public static final double maxAngularAccelerartion = 1; 
-    
-    
     }
 }

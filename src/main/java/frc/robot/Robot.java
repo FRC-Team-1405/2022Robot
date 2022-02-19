@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.BatteryLED;
+import frc.robot.commands.UnderGlow;
 import frc.robot.sensor.LEDStrip;
 
 /**
@@ -21,9 +22,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDPORT, Constants.PWM_Port.TOTALLEDCOUNT);
+  private LEDStrip ledStrip = new LEDStrip(Constants.PWMPort.LEDPORT, Constants.PWMPort.TOTALLEDCOUNT);
   private final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
-
+  private final UnderGlow underGlow = new UnderGlow(ledStrip);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,6 +35,10 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    //batteryMonitor and underGlow can run during disabled 
+    batteryMonitor.schedule(false);
+    underGlow.schedule(false);
   }
 
   /**
@@ -58,7 +63,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    batteryMonitor.execute();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -71,9 +75,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    if (!batteryMonitor.isScheduled())
-      batteryMonitor.schedule(false);
   }
 
   /** This function is called periodically during autonomous. */

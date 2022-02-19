@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-  TalonSRX flyWheel = new WPI_TalonSRX(Constants.CAN_ID.FLYWHEEL);
-  WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CAN_ID.TRIGGER);
+  TalonSRX flyWheel = new WPI_TalonSRX(Constants.CANID.FLYWHEEL);
+  WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CANID.TRIGGER);
 
   /** Creates a new Shooter. */
   public Shooter() {

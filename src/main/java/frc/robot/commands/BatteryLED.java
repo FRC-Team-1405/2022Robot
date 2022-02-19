@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -18,14 +17,14 @@ public class BatteryLED extends CommandBase {
   
   public BatteryLED(LEDStrip ledStrip) {
     this.ledStrip = ledStrip;
-    // SmartDashboard.putNumber("LedVoltageTest", 0);
+    SmartDashboard.putNumber("LedVoltageTest", 0);
     setName("BatteryLED");
   }
 
   @Override
   public void execute() {
-    double voltage = RobotController.getBatteryVoltage();
-    // double voltage = SmartDashboard.getNumber("LedVoltageTest", 0);
+    // double voltage = RobotController.getBatteryVoltage();
+    double voltage = SmartDashboard.getNumber("LedVoltageTest", 0);
 
     voltage = voltage < Constants.BatteryMonitor.MINVOLTAGE ? Constants.BatteryMonitor.MINVOLTAGE : voltage;
 
@@ -56,7 +55,7 @@ public class BatteryLED extends CommandBase {
   }
 
   @Override
-  public boolean isFinished() {
-    return false;
+  public boolean runsWhenDisabled(){
+    return true;
   }
 }
