@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDS, Constants.PWM_Port.TOTALLEDCOUNT);
+  private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDPORT, Constants.PWM_Port.TOTALLEDCOUNT);
   private final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
 
 

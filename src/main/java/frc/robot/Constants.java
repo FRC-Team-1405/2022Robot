@@ -21,15 +21,24 @@ public final class Constants {
     public final class BatteryMonitor {
         public final static double MAXVOLTAGE = 12.5;
         public final static double MINVOLTAGE = 7;
-        //ledCount has to be a multiple of 3
+        //LEDCOUNT has to be a multiple of 3
         public final static int LEDSTART = 0;
         public final static int LEDSTOP = 15;
-        public final static int LEDCOUNT = LEDSTOP - LEDSTART;
-        public final static int BRIGHTNESS = 100;
+        public final static int METERCOUNT = LEDSTOP - LEDSTART;
+        public final static int LEDCOUNT = METERCOUNT * 2;
+
+
+        public final static int SEGMENTLENGTH = METERCOUNT / 3;
+
+        public final static int REDSTART = 0;
+        public final static int YELLOWSTART = SEGMENTLENGTH;
+        public final static int GREENSTART = SEGMENTLENGTH * 2;
+
+        public final static double BRIGHTNESS = 0.25;
     };
 
     public final class PWM_Port{
-        public final static int LEDS = 8;
+        public final static int LEDPORT = 8;
         public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT;
     };
     public final class SwerveBase {
