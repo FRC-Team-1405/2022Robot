@@ -10,14 +10,13 @@ import com.ctre.phoenix.sensors.CANCoder;
 //WPILIB deps
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class SwerveModule extends SubsystemBase {
-  /** Creates a new SwerveModule. */ 
-
   /** A swerve module must have a drive motor and a steering motor. The drive motor gives the power to 
   the wheel of the swerve module, and the steering motor points the wheel in the direction it should 
   go. It can be thought of as a vector, with the steering motor controlling the direction and the 
@@ -30,31 +29,58 @@ public class SwerveModule extends SubsystemBase {
   //Our external encoder for measuring the turns of the steering motor 
   private final CANCoder steeringEncoder;
 
-  private static final double wheelRadius = Units.inchesToMeters(4); 
-  private static final double driveMotorEncoderResolution = 2048;  
-  //For converting 100 milleseconds (heretofore referred to as 'ms') to seconds 
-  private static final double timeConstantForConversion = 10;
-
-  /** A simple conversion formula to turn encoder velocity (sensor units/100ms) to meters per second. 
-  To do: add gear reduction to this formula. Our encoder for the drive motor is located above
-  the gear reduction for our swerve module. Therefore, the gear reduction of the swerve module must be 
-  factored in to our calculation. Currently, it is not. */ 
-  private static final double velocityMeters = wheelRadius * 2 * Math.PI * timeConstantForConversion / driveMotorEncoderResolution;
   
   // Map ID to offset default values
   private static double[] offsets = {0, 0, 0, 0};
   private static final int ENCODER_BASE = Constants.SwerveBase.AZIMUTHFRONTLEFT;
 
-  //Tell the wheel to stop controlling the sterring motor
-  private boolean isNormalizeWheel = false;
-  
-  //I feel the constructor is pretty self-explanatory 
-  public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID) {
+  // The state machine has 3 states:
+  // BootState  check the SwerveDrive/Normalize then Normalize or Boot
+  // Normalize  normalize the wheels then move to ready
+  // Ready      the motors are ready to command
+  private enum NormalizeWheels {    
+    // This state can only be set by restarting the robot code.
+    BootState{
+      public NormalizeWheels execute(SwerveModule module) {
+        if (SmartDashboard.getBoolean("SwervDrive/Normalize", false))
+          return Normalize;
 
+        return Ready;
+      };
+    },
+    // This state is entered only after boot when SwerveDrive/Normalize is true
+    Normalize{
+      public NormalizeWheels execute(SwerveModule module) {
+        module.NormolizeModule();
+        SmartDashboard.putBoolean("SwervDrive/Normalize", false);
+        return Ready;
+      };
+    },
+    // This state is entered after normaizing or after boot if SwerveDrive/Normalize is false
+    Ready{
+      public NormalizeWheels execute(SwerveModule module){
+        return this;
+      };
+    };
+    public abstract NormalizeWheels execute(SwerveModule module);
+
+    static {
+      if (!SmartDashboard.containsKey("SwervDrive/Normalize"))
+        SmartDashboard.putBoolean("SwervDrive/Normalize", false);
+    };
+  };
+
+  //Tell the wheel to stop controlling the sterring motor
+  private NormalizeWheels normalizeWheels = NormalizeWheels.BootState;
+
+
+
+  //I feel the constructor is pretty self-explanatory 
+  public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, int stopAngle) {
     driveMotor = new WPI_TalonFX(driveMotorID); 
     steeringMotor = new WPI_TalonFX(steeringMotorID); 
     steeringEncoder = new CANCoder(steeringEncoderID);
-
+    
     String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotorID);
     Preferences.initDouble(prefKey, offsets[steeringMotorID-ENCODER_BASE]);
     offsets[steeringMotorID-ENCODER_BASE] =  Preferences.getDouble(prefKey, offsets[steeringMotorID-ENCODER_BASE]);
@@ -67,8 +93,10 @@ public class SwerveModule extends SubsystemBase {
   /** Allows us to command the swervemodule to any given veloctiy and angle, ultimately coming from our
   joystick inputs. */
   public void setDesiredState(SwerveModuleState desiredState) {
-      if(isNormalizeWheel)
-        return; 
+      normalizeWheels = normalizeWheels.execute(this);
+      if (normalizeWheels != NormalizeWheels.Ready)
+        return;
+
       //Later, we will create a SwerveModuleState from joystick inputs to use as our desiredState
       // SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngleNormalized())); 
       SwerveModuleState state = desiredState;      
@@ -76,7 +104,7 @@ public class SwerveModule extends SubsystemBase {
        why the two doubles below need to have 'final' access modifiers*/
        //final double driveOutput =  state.speedMetersPerSecond / velocityMeters;
        //We are using speedMetersPerSecond as a percent voltage value from -1 to 1 
-       double percentVoltage = state.speedMetersPerSecond; 
+       double driveSpeed = state.speedMetersPerSecond *Constants.SwerveBase.velocitySensor; 
 
       //  final double normalized = getAngleNormalized();
       final double absolute = getAngle();
@@ -84,29 +112,27 @@ public class SwerveModule extends SubsystemBase {
 
       if (delta > 90.0) {
         delta -= 180.0 ;
-        percentVoltage *= -1;
+        driveSpeed *= -1;
       } else if (delta < -90.0){
         delta += 180.0 ;
-        percentVoltage *= -1;
+        driveSpeed *= -1;
       } 
       
       final double target = AngleToEncoder(absolute + delta);
       
       //Now we can command the steering motor and drive motor 
-      if ( percentVoltage != 0){
+      if(driveSpeed == 0.0){ 
+        steeringMotor.set(ControlMode.PercentOutput, 0.0);
+        driveMotor.set(ControlMode.PercentOutput, 0.0);   
+      } else {
         steeringMotor.set(ControlMode.MotionMagic, target); 
-        /** "Motion Magic" is CTRE (the motor controller manufacturer) "mumbo-jumbo" for a profiled 
-        position output. We have found from experiment that motors controlled with this control mode 
-        tend to experience less mechanical jerk from sudden changes in acceleration, which the mechanical 
-        mentors have informed me is harmful to some rather expensive and difficult to replace parts in 
-        the swerve modules. */ 
+        driveMotor.set(ControlMode.Velocity, driveSpeed);   
       }
-      driveMotor.set(ControlMode.PercentOutput, percentVoltage); 
        
   }
   //A getter for the velocity of the drive motor, converted to meters per second.
   public double getVelocityMetersPerSecond(){ 
-    return driveMotor.getSelectedSensorVelocity() * velocityMeters;
+    return driveMotor.getSelectedSensorVelocity() * Constants.SwerveBase.velocityMeters;
   } 
 
   public double getAngle(){ 
@@ -135,15 +161,9 @@ public class SwerveModule extends SubsystemBase {
         return Math.IEEEremainder(deltaNeg,360);
   }
 
-  public void NormolizeModule(boolean isFinished) {
-    isNormalizeWheel = !isFinished;
-    steeringMotor.set(ControlMode.PercentOutput, 0);
-
+  public void NormolizeModule() {
     offsets[steeringMotor.getDeviceID()-ENCODER_BASE] = getAngle();
-
-    if(isFinished) {
-      String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotor.getDeviceID());
-      Preferences.setDouble(prefKey, offsets[steeringMotor.getDeviceID()-ENCODER_BASE]);
-    }
+    String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotor.getDeviceID());
+    Preferences.setDouble(prefKey, offsets[steeringMotor.getDeviceID()-ENCODER_BASE]);
   }
 }

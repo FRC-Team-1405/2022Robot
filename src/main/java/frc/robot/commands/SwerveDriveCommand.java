@@ -12,8 +12,6 @@ import frc.robot.subsystems.SwerveDrive;
 public class SwerveDriveCommand extends CommandBase {
   /** Creates a new SwerveDriveCommand. */ 
 
-  private static final double DEADBAND = 0.4; 
-
   private SwerveDrive driveBase; 
   private DoubleSupplier getXSpeed; 
   private DoubleSupplier getYSpeed; 
@@ -38,9 +36,9 @@ public class SwerveDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpeed = deadband(getXSpeed.getAsDouble()); 
-    double ySpeed = deadband(getYSpeed.getAsDouble()); 
-    double rotationSpeed = deadband(getRotationSpeed.getAsDouble()); 
+    double xSpeed = getXSpeed.getAsDouble(); 
+    double ySpeed = getYSpeed.getAsDouble(); 
+    double rotationSpeed = getRotationSpeed.getAsDouble(); 
 
     driveBase.drive(xSpeed, ySpeed, rotationSpeed);
   }
@@ -56,9 +54,4 @@ public class SwerveDriveCommand extends CommandBase {
   public boolean isFinished() {
     return false;
   } 
-  //We use this function to apply a prespecified deaband to the drive inputs
-  private double deadband(double value){ 
-    if (Math.abs(value) < DEADBAND) return 0.0; 
-    return value; 
-  }
 }
