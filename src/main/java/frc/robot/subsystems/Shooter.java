@@ -9,13 +9,17 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.sensor.UltrasonicSensor;
 
 public class Shooter extends SubsystemBase {
   TalonSRX flyWheel = new WPI_TalonSRX(Constants.CAN_ID.FLYWHEEL);
-  WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CAN_ID.TRIGGER);
+  WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CAN_ID.TRIGGER); 
+  UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Constants.Sensors.ULTRASONICSENSOR);
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -43,7 +47,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Ultrasonic Sensor", ultrasonicSensor.GetValue());
   }
 
   public void flywheelStop() {

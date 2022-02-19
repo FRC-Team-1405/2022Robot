@@ -32,7 +32,7 @@ public class SwerveModule extends SubsystemBase {
   
   // Map ID to offset default values
   private static double[] offsets = {0, 0, 0, 0};
-  private static final int ENCODER_BASE = Constants.SwerveBase.azimuthFrontLeft;
+  private static final int ENCODER_BASE = Constants.SwerveBase.AZIMUTHFRONTLEFT;
 
   // The state machine has 3 states:
   // BootState  check the SwerveDrive/Normalize then Normalize or Boot

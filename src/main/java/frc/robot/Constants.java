@@ -35,7 +35,12 @@ public final class Constants {
     public final class PWM_Port{
         public final static int LEDS = 8;
         public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT;
-    };
+    }; 
+
+    
+    public final class Sensors{
+        public final static int ULTRASONICSENSOR = 3;
+    }
     public final static class SwerveBase {
         public final static int driveFrontLeft = 1;
         public final static int driveFrontRight = 2;
