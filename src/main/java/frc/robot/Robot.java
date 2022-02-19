@@ -7,9 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.BatteryLED;
-import frc.robot.commands.UnderGlow;
-import frc.robot.sensor.LEDStrip;
+import frc.robot.commands.LEDManager;
+import frc.robot.lib.LEDs.BatteryLED;
+import frc.robot.lib.LEDs.LED;
+import frc.robot.lib.LEDs.UnderGlow;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,9 +23,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private LEDStrip ledStrip = new LEDStrip(Constants.PWMPort.LEDPORT, Constants.PWMPort.TOTALLEDCOUNT);
-  private final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
-  private final UnderGlow underGlow = new UnderGlow(ledStrip);
+  private LED[] leds = new LED[2];
+  private LEDManager ledManager;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -36,9 +36,12 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    //batteryMonitor and underGlow can run during disabled 
-    batteryMonitor.schedule(false);
-    underGlow.schedule(false);
+    //ledManager can run during disabled
+    leds[0] = new BatteryLED(Constants.BatteryMonitor.LEDCOUNT);
+    leds[1] = new UnderGlow(Constants.BatteryMonitor.LEDCOUNT);
+
+    ledManager = new LEDManager(Constants.PWMPort.LEDPORT, leds);
+    ledManager.schedule(false);
   }
 
   /**
@@ -91,9 +94,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    if (!batteryMonitor.isScheduled())
-      batteryMonitor.schedule(false);
   }
 
   /** This function is called periodically during operator control. */

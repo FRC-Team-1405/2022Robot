@@ -22,26 +22,15 @@ public final class Constants {
         public final static double MAXVOLTAGE = 12.5;
         public final static double MINVOLTAGE = 7;
         //LEDCOUNT has to be a multiple of 3
-        public final static int LEDSTART = 0;
-        public final static int LEDSTOP = 15;
-        public final static int METERCOUNT = LEDSTOP - LEDSTART;
+        public final static int METERCOUNT = 15;
         public final static int LEDCOUNT = METERCOUNT * 2;
-
-
-        public final static int SEGMENTLENGTH = METERCOUNT / 3;
-
-        public final static int REDSTART = 0;
-        public final static int YELLOWSTART = SEGMENTLENGTH;
-        public final static int GREENSTART = SEGMENTLENGTH * 2;
 
         public final static double BRIGHTNESS = 0.2;
     };
 
     public class UnderGlow{
         //The under glow has 43 leds
-        public final static int LEDSTART = 30;
-        public final static int LEDSTOP = 42;
-        public final static int LEDCOUNT = LEDSTOP - LEDSTART;
+        public final static int LEDCOUNT = 10;
 
         public final static double BRIGHTNESS = 0.2;
     }

@@ -30,8 +30,7 @@ public class LEDStrip {
         ledBuffer = buffer;
     }
 
-    public void displayLEDBuffer(AddressableLEDBuffer ledBuffer) {
-        this.ledBuffer = ledBuffer;
+    public void displayLEDBuffer() {
         led.setData(ledBuffer);
     }
 
