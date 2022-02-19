@@ -40,7 +40,7 @@ public class Shooter extends SubsystemBase {
   private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
   private int speedLowIndex = 0;
   private int speedHighIndex = 0;
-  private int adjustSpeed = 2500;
+  private int adjustSpeed = -2500;
   private int idleSpeed = -20000;
   private int lowSpeed = -20000;
   private int highSpeed = -30000;
@@ -91,7 +91,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean flyWheelReady(){
-    return Math.abs(flyWheel.getClosedLoopError()) < 500;
+    return Math.abs(flyWheel.getClosedLoopError()) < 750;
   }
 
   private void setLowIndex(int value) {
