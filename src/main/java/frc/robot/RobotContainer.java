@@ -10,6 +10,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.FireCommand;
+import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -20,9 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.SwerveBase;
 import frc.robot.commands.AutoFireCargo;
-import frc.robot.commands.AutoFireCargo.Goal;
-import frc.robot.commands.BatteryLED;
 import frc.robot.commands.FireAndBackUp;
+import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.FireCommand;
@@ -40,9 +44,6 @@ public class RobotContainer {
   
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR);
-
-  private LEDStrip ledStrip = new LEDStrip(Constants.PWM_Port.LEDS, Constants.PWM_Port.TOTALLEDCOUNT);
-  public final BatteryLED batteryMonitor = new BatteryLED(ledStrip);
 
   public RobotContainer() {
     configureButtonBindings();

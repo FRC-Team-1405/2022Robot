@@ -17,7 +17,7 @@ public class LEDStrip {
     public LEDStrip(int port, int ledCount) {
         led = new AddressableLED(port);
         ledBuffer = new AddressableLEDBuffer(ledCount);
-        led.setLength(ledBuffer.getLength());
+        led.setLength(ledCount);
         led.setData(ledBuffer);
         led.start(); 
     }
@@ -30,8 +30,7 @@ public class LEDStrip {
         ledBuffer = buffer;
     }
 
-    public void displayLEDBuffer(AddressableLEDBuffer ledBuffer) {
-        this.ledBuffer = ledBuffer;
+    public void displayLEDBuffer() {
         led.setData(ledBuffer);
     }
 
@@ -46,37 +45,11 @@ public class LEDStrip {
         data[dataIndex++] = (byte) color.red;  
     }
 
-    public void setColor(Color8Bit[] colors) { 
-        if(colors.length >= ledCount)
-            return; 
-        
-        for(int colorIndex = 0; colorIndex < colors.length; colorIndex++) {
-            int dataIndex = colorIndex * 4 + 4;
-            data[dataIndex++] = (byte) 0xFE; 
-            data[dataIndex++] = (byte) colors[colorIndex].blue; 
-            data[dataIndex++] = (byte) colors[colorIndex].green; 
-            data[dataIndex++] = (byte) colors[colorIndex].red;  
-        }
-    } 
-
-   public void display() { 
-        port.write(data, data.length);
-   }
-
-   public Color devideColor(Color color) {
-     double blue = color.blue / 5;
-     double green = color.green / 5;
-     double red = color.red / 5;
+   public Color setPercentBrightness(Color color, double brightness) {
+     double blue = color.blue * brightness;
+     double green = color.green * brightness;
+     double red = color.red * brightness;
  
      return new Color(red, green, blue);
-   }
-
-   public void testLEDs() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setRGB(i, 0, Math.abs(255-i) % 100, i % 100);
-     }
-     led.setData(ledBuffer);
-     led.start();
-     led.stop();
    }
 }
