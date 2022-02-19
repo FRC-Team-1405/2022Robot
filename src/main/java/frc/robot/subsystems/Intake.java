@@ -27,14 +27,16 @@ public class Intake extends SubsystemBase {
 
   public void dropIntake(){ 
     intakeDropper.set(ControlMode.PercentOutput, INTAKE_DOWN); 
+    intake();
   } 
 
   public void liftIntake(){ 
     intakeDropper.set(ControlMode.PercentOutput, INTAKE_UP); 
+    intakeStop();
   } 
 
   public void intake(){ 
-    pickupMotor.set(ControlMode.PercentOutput, -1.0);
+    pickupMotor.set(ControlMode.PercentOutput, 0.6);
   } 
 
   public void intakeStop(){ 

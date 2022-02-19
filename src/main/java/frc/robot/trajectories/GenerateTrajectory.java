@@ -37,5 +37,10 @@ public class GenerateTrajectory {
             new Pose2d(Units.feetToMeters(0), Units.feetToMeters(3), new Rotation2d(0)),
             config);
         return trajectory.relativeTo(currentPosition); 
-    }
+    } 
+
+    // public static Trajectory twoBallAutoLeftPartOne(Pose2d currentPosition){ 
+    //     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), 
+    //     List.of(new Translation2d(0, Units.feetToMeters(1)), new Translation2d(0, Units.feetToMeters(2))), new Pose2d(), config)
+    // }
 }

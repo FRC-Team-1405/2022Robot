@@ -19,14 +19,14 @@ public class IntakeCargo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.dropIntake();
+    //intake.dropIntake();
     intake.intake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.liftIntake();
+    //intake.liftIntake();
     intake.intakeStop();
   }
 
