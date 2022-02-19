@@ -7,6 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.LEDManager;
+import frc.robot.lib.LEDs.BatteryLED;
+import frc.robot.lib.LEDs.LED;
+import frc.robot.lib.LEDs.UnderGlow;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +23,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private LED[] leds = new LED[2];
+  private LEDManager ledManager;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -28,6 +35,13 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    //ledManager can run during disabled
+    leds[0] = new BatteryLED(Constants.BatteryMonitor.LEDCOUNT);
+    leds[1] = new UnderGlow(Constants.BatteryMonitor.LEDCOUNT);
+
+    ledManager = new LEDManager(Constants.PWMPort.LEDPORT, leds);
+    ledManager.schedule(false);
   }
 
   /**
@@ -52,7 +66,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    m_robotContainer.batteryMonitor.execute();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -77,7 +90,6 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    m_robotContainer.batteryMonitor.schedule(false);
     m_robotContainer.setStartingLocation();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

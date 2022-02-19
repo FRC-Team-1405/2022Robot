@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-    public final class CAN_ID {
+    public final class CANID {
         public final static int FLYWHEEL =  10; 
         public final static int TRIGGER = 11;
         public final static int PICKUP = 5; 
@@ -25,19 +25,24 @@ public final class Constants {
     public final class BatteryMonitor {
         public final static double MAXVOLTAGE = 12.5;
         public final static double MINVOLTAGE = 7;
-        //ledCount has to be a multiple of 3
-        public final static int LEDSTART = 0;
-        public final static int LEDSTOP = 15;
-        public final static int LEDCOUNT = LEDSTOP - LEDSTART;
-        public final static int BRIGHTNESS = 100;
+        //LEDCOUNT has to be a multiple of 3
+        public final static int METERCOUNT = 15;
+        public final static int LEDCOUNT = METERCOUNT * 2;
+
+        public final static double BRIGHTNESS = 0.2;
     };
 
-    public final class PWM_Port{
-        public final static int LEDS = 8;
-        public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT;
-    }; 
+    public class UnderGlow{
+        //The under glow has 43 leds
+        public final static int LEDCOUNT = 10;
 
+        public final static double BRIGHTNESS = 0.2;
+    }
     
+    public final class PWMPort{
+        public final static int LEDPORT = 8;
+        public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT + UnderGlow.LEDCOUNT;
+    };
     public final class Sensors{
         public final static int ULTRASONICSENSOR = 3;
     }
