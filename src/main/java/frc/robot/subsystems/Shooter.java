@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Ultrasonic Sensor", ultrasonicSensor.GetValue());
+    SmartDashboard.putNumber("Flywheel Error", flyWheel.getClosedLoopError());
   }
 
   public void flywheelStop() {
@@ -88,10 +88,14 @@ public class Shooter extends SubsystemBase {
 
   public void triggerStop(){
     trigger.set(ControlMode.PercentOutput, 0);
+  } 
+
+  public void triggerReverse() {
+    trigger.set(ControlMode.PercentOutput, -.5); 
   }
 
   public boolean flyWheelReady(){
-    return Math.abs(flyWheel.getClosedLoopError()) < 750;
+    return Math.abs(flyWheel.getClosedLoopError()) < 500;
   }
 
   private void setLowIndex(int value) {

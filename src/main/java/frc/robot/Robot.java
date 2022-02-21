@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 
     //ledManager can run during disabled
     leds[0] = new BatteryLED(Constants.BatteryMonitor.LEDCOUNT);
-    leds[1] = new UnderGlow(Constants.BatteryMonitor.LEDCOUNT);
+    leds[1] = new UnderGlow(Constants.UnderGlow.LEDCOUNT);
 
     ledManager = new LEDManager(Constants.PWMPort.LEDPORT, leds);
     ledManager.schedule(false);
