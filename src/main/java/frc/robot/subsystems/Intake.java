@@ -15,17 +15,26 @@ public class Intake extends SubsystemBase {
   public WPI_TalonSRX intakeDropper = new WPI_TalonSRX(Constants.CANID.INTAKE_DROPPER); 
 
   public double INTAKE_UP = -0.5; 
-  public double INTAKE_DOWN = 0.35; 
-  
+  public double INTAKE_DOWN = 0.6; 
+
+  public Intake() {}
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  } 
+
   public void dropIntake(){ 
     intakeDropper.set(ControlMode.PercentOutput, INTAKE_DOWN); 
-    intake();
   } 
 
   public void liftIntake(){ 
     intakeDropper.set(ControlMode.PercentOutput, INTAKE_UP); 
-    intakeStop();
   } 
+
+  public void stopIntake(){
+    intakeDropper.set(ControlMode.PercentOutput, 0); 
+  }
 
   public void intake(){ 
     pickupMotor.set(ControlMode.PercentOutput, 0.6);

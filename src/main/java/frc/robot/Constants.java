@@ -23,8 +23,8 @@ public final class Constants {
     };
 
     public final class BatteryMonitor {
-        public final static double MAXVOLTAGE = 12;
-        public final static double MINVOLTAGE = 7;
+        public final static double MAXVOLTAGE = 12.5;
+        public final static double MINVOLTAGE = 9;
         //LEDCOUNT has to be a multiple of 3
         public final static int METERCOUNT = 15;
         public final static int LEDCOUNT = METERCOUNT * 2;
@@ -35,7 +35,7 @@ public final class Constants {
     public class UnderGlow{
         //This comment is old so it might not be right
         //The under glow has 43 leds
-        public final static int LEDCOUNT = 10;
+        public final static int LEDCOUNT = 0;
 
         public final static double BRIGHTNESS = 0.2;
     }
@@ -87,6 +87,6 @@ public final class Constants {
      } 
 
      public final class Shooter{ 
-        public final static double INDEX_SPEED = .75; 
+        public final static double INDEX_SPEED = .5; 
     }
 }

@@ -36,10 +36,10 @@ public class SwerveDrive extends SubsystemBase {
 
   public SwerveDrive() {
     //I am making the maxVelocity configurable so we can ajdust our "speedlimit"
-    Preferences.initDouble("SwerveDrive/Speed Limit", 3); 
-    maxVelocity = Preferences.getDouble("SwerveDrive/Speed Limit", 3) ;
-    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 2); 
-    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 2) ;
+    Preferences.initDouble("SwerveDrive/Speed Limit", 6); 
+    maxVelocity = Preferences.getDouble("SwerveDrive/Speed Limit", 6) ;
+    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 4); 
+    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 4) ;
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
 
@@ -84,7 +84,7 @@ public class SwerveDrive extends SubsystemBase {
   // FieldOriented and Gyro control mapped to control stick button on a true/false boolean
 
   public void setStartLocation(double yPos, double xPos, double rotation) {
-    gyro.setAngleAdjustment(rotation);
+    gyro.setAngleAdjustment(rotation - gyro.getAngle());
   } 
 
   public Pose2d getPose(){ 

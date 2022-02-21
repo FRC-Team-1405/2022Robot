@@ -19,14 +19,6 @@ public class Shooter extends SubsystemBase {
   WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CANID.TRIGGER); 
   UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Constants.Sensors.ULTRASONICSENSOR);
 
-  private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
-  private int speedLowIndex = 0;
-  private int speedHighIndex = 0;
-  private int adjustSpeed = 2500;
-  private int idleSpeed = -20000;
-  private int lowSpeed = -20000;
-  private int highSpeed = -30000;
-
   public Shooter() {
     Preferences.initInt("Shooter/Speed/Low", lowSpeed);
     lowSpeed = Preferences.getInt("Shooter/Speed/Low", lowSpeed);
@@ -42,10 +34,17 @@ public class Shooter extends SubsystemBase {
     setLowIndex(speedLowIndex);
     setHighIndex(speedHighIndex);
   }
+  private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
+  private int speedLowIndex = 0;
+  private int speedHighIndex = 0;
+  private int adjustSpeed = -2500;
+  private int idleSpeed = -20000;
+  private int lowSpeed = -20000;
+  private int highSpeed = -30000;
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Ultrasonic Sensor", ultrasonicSensor.GetValue());
+    SmartDashboard.putNumber("Flywheel Error", flyWheel.getClosedLoopError());
   }
 
   public void flywheelStop() {
@@ -86,6 +85,10 @@ public class Shooter extends SubsystemBase {
 
   public void triggerStop() {
     trigger.set(ControlMode.PercentOutput, 0);
+  } 
+
+  public void triggerReverse() {
+    trigger.set(ControlMode.PercentOutput, -.5); 
   }
 
   public boolean flyWheelReady() {
