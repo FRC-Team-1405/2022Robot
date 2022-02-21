@@ -9,8 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,7 +19,14 @@ public class Shooter extends SubsystemBase {
   WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CANID.TRIGGER); 
   UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Constants.Sensors.ULTRASONICSENSOR);
 
-  /** Creates a new Shooter. */
+  private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
+  private int speedLowIndex = 0;
+  private int speedHighIndex = 0;
+  private int adjustSpeed = 2500;
+  private int idleSpeed = -20000;
+  private int lowSpeed = -20000;
+  private int highSpeed = -30000;
+
   public Shooter() {
     Preferences.initInt("Shooter/Speed/Low", lowSpeed);
     lowSpeed = Preferences.getInt("Shooter/Speed/Low", lowSpeed);
@@ -37,13 +42,6 @@ public class Shooter extends SubsystemBase {
     setLowIndex(speedLowIndex);
     setHighIndex(speedHighIndex);
   }
-  private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
-  private int speedLowIndex = 0;
-  private int speedHighIndex = 0;
-  private int adjustSpeed = 2500;
-  private int idleSpeed = -20000;
-  private int lowSpeed = -20000;
-  private int highSpeed = -30000;
 
   @Override
   public void periodic() {
@@ -86,11 +84,11 @@ public class Shooter extends SubsystemBase {
     trigger.set(ControlMode.PercentOutput, triggerSpeed);
   }
 
-  public void triggerStop(){
+  public void triggerStop() {
     trigger.set(ControlMode.PercentOutput, 0);
   }
 
-  public boolean flyWheelReady(){
+  public boolean flyWheelReady() {
     return Math.abs(flyWheel.getClosedLoopError()) < 500;
   }
 

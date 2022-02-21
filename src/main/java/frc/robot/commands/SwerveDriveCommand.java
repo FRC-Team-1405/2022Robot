@@ -10,18 +10,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveDrive;
 
 public class SwerveDriveCommand extends CommandBase {
-  /** Creates a new SwerveDriveCommand. */ 
-
-  private SwerveDrive driveBase; 
-  private DoubleSupplier getXSpeed; 
-  private DoubleSupplier getYSpeed; 
-  private DoubleSupplier getRotationSpeed; 
+  private SwerveDrive driveBase;
+  private DoubleSupplier getXSpeed, getYSpeed, getRotationSpeed; 
 
   public SwerveDriveCommand(DoubleSupplier getXSpeed, 
                             DoubleSupplier getYSpeed, 
                             DoubleSupplier getRotationSpeed, 
                             SwerveDrive driveBase) {
-    // Use addRequirements() here to declare subsystem dependencies. 
+
     this.getXSpeed = getXSpeed; 
     this.getYSpeed = getYSpeed; 
     this.getRotationSpeed = getRotationSpeed; 
@@ -29,29 +25,13 @@ public class SwerveDriveCommand extends CommandBase {
     addRequirements(driveBase);
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpeed = getXSpeed.getAsDouble(); 
-    double ySpeed = getYSpeed.getAsDouble(); 
-    double rotationSpeed = getRotationSpeed.getAsDouble(); 
-
-    driveBase.drive(xSpeed, ySpeed, rotationSpeed);
+    driveBase.drive(getXSpeed.getAsDouble(), getYSpeed.getAsDouble(), getRotationSpeed.getAsDouble());
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     driveBase.drive(0.0, 0.0, 0.0);
   }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  } 
 }

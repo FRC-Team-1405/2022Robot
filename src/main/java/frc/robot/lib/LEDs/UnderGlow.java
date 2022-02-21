@@ -29,11 +29,9 @@ public class UnderGlow extends LED {
         Color teamColor;
         if(team == Alliance.Blue) {
           teamColor = super.setPercentBrightness(Color.kBlue, Constants.UnderGlow.BRIGHTNESS);
-        }
-        else if(team == Alliance.Red) {
+        } else if(team == Alliance.Red) {
           teamColor = super.setPercentBrightness(Color.kRed, Constants.UnderGlow.BRIGHTNESS);
-        }
-        else {
+        } else {
           teamColor = super.setPercentBrightness(Color.kGreen, Constants.UnderGlow.BRIGHTNESS);
         }
     

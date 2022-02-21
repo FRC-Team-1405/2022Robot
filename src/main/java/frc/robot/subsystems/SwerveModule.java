@@ -11,28 +11,18 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class SwerveModule extends SubsystemBase {
-  /** A swerve module must have a drive motor and a steering motor. The drive motor gives the power to 
-  the wheel of the swerve module, and the steering motor points the wheel in the direction it should 
-  go. It can be thought of as a vector, with the steering motor controlling the direction and the 
-  drive motor controlling the magnitude (oh yeah!). */ 
-
-  //Our drive motor
   private final WPI_TalonFX driveMotor; 
-  //Our steering motor 
   private final WPI_TalonFX steeringMotor; 
-  //Our external encoder for measuring the turns of the steering motor 
   private final CANCoder steeringEncoder;
 
-  
   // Map ID to offset default values
   private static double[] offsets = {0, 0, 0, 0};
-  private static final int ENCODER_BASE = Constants.SwerveBase.azimuthFrontLeft;
+  private static final int ENCODER_BASE = Constants.SwerveBase.ROTATIONFRONTLEFT;
 
   // The state machine has 3 states:
   // BootState  check the SwerveDrive/Normalize then Normalize or Boot
@@ -73,8 +63,6 @@ public class SwerveModule extends SubsystemBase {
   //Tell the wheel to stop controlling the sterring motor
   private NormalizeWheels normalizeWheels = NormalizeWheels.BootState;
 
-
-
   //I feel the constructor is pretty self-explanatory 
   public SwerveModule(int driveMotorID, int steeringMotorID, int steeringEncoderID, int stopAngle) {
     driveMotor = new WPI_TalonFX(driveMotorID); 
@@ -97,19 +85,19 @@ public class SwerveModule extends SubsystemBase {
       if (normalizeWheels != NormalizeWheels.Ready)
         return;
 
-      //Later, we will create a SwerveModuleState from joystick inputs to use as our desiredState
       // SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(getAngleNormalized())); 
       SwerveModuleState state = desiredState;      
        /*We need this value back in sensor units/100ms to command the falcon drive motor Note: I do not know
        why the two doubles below need to have 'final' access modifiers*/
        //final double driveOutput =  state.speedMetersPerSecond / velocityMeters;
        //We are using speedMetersPerSecond as a percent voltage value from -1 to 1 
-       double driveSpeed = state.speedMetersPerSecond *Constants.SwerveBase.velocitySensor; 
+       double driveSpeed = state.speedMetersPerSecond *Constants.SwerveBase.VELOCITYSENSOR; 
 
       //  final double normalized = getAngleNormalized();
       final double absolute = getAngle();
       double delta = AngleDelta( absolute - offsets[steeringMotor.getDeviceID()-ENCODER_BASE], state.angle.getDegrees() );
 
+      //This is our optimize function
       if (delta > 90.0) {
         delta -= 180.0 ;
         driveSpeed *= -1;
@@ -120,7 +108,6 @@ public class SwerveModule extends SubsystemBase {
       
       final double target = AngleToEncoder(absolute + delta);
       
-      //Now we can command the steering motor and drive motor 
       if(driveSpeed == 0.0){ 
         steeringMotor.set(ControlMode.PercentOutput, 0.0);
         driveMotor.set(ControlMode.PercentOutput, 0.0);   
@@ -130,14 +117,16 @@ public class SwerveModule extends SubsystemBase {
       }
        
   }
+
   //A getter for the velocity of the drive motor, converted to meters per second.
   public double getVelocityMetersPerSecond(){ 
-    return driveMotor.getSelectedSensorVelocity() * Constants.SwerveBase.velocityMeters;
+    return driveMotor.getSelectedSensorVelocity() * Constants.SwerveBase.VELOCITYMETERS;
   } 
 
   public double getAngle(){ 
     return steeringEncoder.getPosition();
   } 
+
   public double getAngleNormalized(){
     return Math.IEEEremainder(steeringEncoder.getPosition(), 180.0);
   } 
@@ -146,6 +135,7 @@ public class SwerveModule extends SubsystemBase {
   public static int AngleToEncoder(double deg){
       return (int)((double)deg / 360.0 * (double)ENCODER_COUNT);
   }
+
   public static double EncoderToAngle(int tick){
       return tick / (double)ENCODER_COUNT * 360.0;
   }

@@ -11,20 +11,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-  /** Creates a new Intake. */
   public WPI_TalonSRX pickupMotor = new WPI_TalonSRX(Constants.CANID.PICKUP); 
   public WPI_TalonSRX intakeDropper = new WPI_TalonSRX(Constants.CANID.INTAKE_DROPPER); 
 
   public double INTAKE_UP = -0.5; 
   public double INTAKE_DOWN = 0.35; 
-
-  public Intake() {}
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  } 
-
+  
   public void dropIntake(){ 
     intakeDropper.set(ControlMode.PercentOutput, INTAKE_DOWN); 
     intake();

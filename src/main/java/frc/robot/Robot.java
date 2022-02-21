@@ -23,7 +23,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private LED[] leds = new LED[2];
   private LEDManager ledManager;
 
   /**
@@ -37,10 +36,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     //ledManager can run during disabled
-    leds[0] = new BatteryLED(Constants.BatteryMonitor.LEDCOUNT);
-    leds[1] = new UnderGlow(Constants.BatteryMonitor.LEDCOUNT);
-
-    ledManager = new LEDManager(Constants.PWMPort.LEDPORT, leds);
+    ledManager = new LEDManager(Constants.PWMPort.LEDPORT, new LED[]{ new BatteryLED(Constants.BatteryMonitor.LEDCOUNT), new UnderGlow(Constants.UnderGlow.LEDCOUNT) });
     ledManager.schedule(false);
   }
 
