@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.subsystems.Shooter;
@@ -12,9 +11,7 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.trajectories.GenerateTrajectory;
 
 public class FireAndBackUp extends SequentialCommandGroup {
-  /** Creates a new FireAndBackUp. */ 
   public FireAndBackUp(SwerveDrive swerveDrive, Shooter shooter, Goal goal) {
-    // Use addRequirements() here to declare subsystem dependencies. 
     addCommands( new AutoFireCargo(shooter, goal),
                  new RunTrajectory(GenerateTrajectory.backupOneMeter(swerveDrive.getPose()), swerveDrive));
   }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.FireCommand;
+import frc.robot.commands.IndexCargo;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -21,21 +22,17 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.SwerveBase;
 import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.FireAndBackUp;
 import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
-import frc.robot.commands.FireCommand;
 import frc.robot.commands.IntakeCargo;
-import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.sensor.LEDStrip;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.SwerveDrive;
 
 public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
@@ -72,7 +69,6 @@ public class RobotContainer {
     else
       finalY = driver.getLeftX() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
     
-    SmartDashboard.putNumber("ySpeed", finalY);
     return finalY;
   } 
 
@@ -83,7 +79,6 @@ public class RobotContainer {
     else
       finalRotation = driver.getRightX() * 0.5 * (1.0 + driver.getRightTriggerAxis());
 
-    SmartDashboard.putNumber("rotationSpeed", finalRotation);
     return finalRotation;
   }
 
@@ -94,16 +89,16 @@ public class RobotContainer {
   }
 
   private void configureOperatorButtons(){
-    var stopCommand = new InstantCommand( shooter::flywheelStop);
-    var idleCommand = new InstantCommand( shooter::flywheelIdleSpeed);
-    var toggleIdleCommand = new ConditionalCommand( idleCommand, stopCommand, shooter::isStopped);
+    InstantCommand stopCommand = new InstantCommand( shooter::flywheelStop);
+    InstantCommand idleCommand = new InstantCommand( shooter::flywheelIdleSpeed);
+    ConditionalCommand toggleIdleCommand = new ConditionalCommand( idleCommand, stopCommand, shooter::isStopped);
 
     new JoystickButton(operator, XboxController.Button.kB.value).whenPressed( toggleIdleCommand );
 
-    var upTrigger = new Trigger( () -> {
+    Trigger upTrigger = new Trigger( () -> {
       return operator.getPOV() == 0 || operator.getPOV() == 45 || operator.getPOV() == 315;
     });
-    var downTrigger = new Trigger( () -> {
+    Trigger downTrigger = new Trigger( () -> {
       return operator.getPOV() == 180 || operator.getPOV() == 135 || operator.getPOV() == 225;
     });
 
@@ -118,7 +113,13 @@ public class RobotContainer {
         .whenActive( shooter::increaseLowIndex );
     new JoystickButton(operator, XboxController.Button.kA.value)
         .and( downTrigger )
-        .whenActive( shooter::decreaseLowIndex );
+        .whenActive( shooter::decreaseLowIndex ); 
+
+    new JoystickButton(operator, XboxController.Button.kRightBumper.value)
+        .whenPressed( new InstantCommand(shooter::triggerFire) )
+        .whenReleased( new SequentialCommandGroup( new InstantCommand(shooter::triggerReverse, shooter),
+                                                   new WaitCommand(0.1),
+                                                   new InstantCommand(shooter::triggerStop, shooter))); 
   }   
 
   private void configureDriverButtons() {
@@ -128,35 +129,37 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kStart.value)
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
-  new JoystickButton(driver, XboxController.Button.kY.value)
+    new JoystickButton(driver, XboxController.Button.kY.value)
         .whileHeld( new FireCargo(shooter, FireCargo.Goal.High) )
         .whenReleased( new FireCargoStop(shooter));
 
-  new JoystickButton(driver, XboxController.Button.kA.value)
+    new JoystickButton(driver, XboxController.Button.kA.value)
         .whileHeld( new FireCargo(shooter, FireCargo.Goal.Low) )
         .whenReleased(new FireCargoStop(shooter)); 
-  
-  
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileHeld(new IntakeCargo(intake));
+        .whileHeld(new IntakeCargo(intake, shooter))
+        .whenReleased(new IndexCargo(shooter));
 
+  new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+        .whenPressed( new SequentialCommandGroup( 
+                          new InstantCommand( intake::dropIntake, intake),
+                          new WaitCommand(0.2),
+                          new InstantCommand( intake::stopIntake, intake)));
 }
 
-  private SendableChooser<Integer> locationSelector; 
-  SendableChooser<Integer> autoSelector;
+  private SendableChooser<Integer> locationSelector = new SendableChooser<Integer>(); 
+  SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
 
   private void initShuffleBoard() {
-    locationSelector = new SendableChooser<Integer>();
     locationSelector.setDefaultOption("None", 0);
-    locationSelector.addOption("Top Left", 1);
-    locationSelector.addOption("Bottom Left", 2);
-    locationSelector.addOption("Top Right", 3);
+    locationSelector.addOption("0 Top Left", 1);
+    locationSelector.addOption("45 Bottom Left", 2);
+    locationSelector.addOption("-45 Top Right", 3);
     locationSelector.addOption("Bottom Right", 4);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
-    autoSelector = new SendableChooser<Integer>();
     autoSelector.setDefaultOption("Do Nothing", 0); 
     autoSelector.addOption("Shoot Only", 1); 
     autoSelector.addOption("Shoot Only Refactor", 2); 
@@ -176,11 +179,12 @@ public class RobotContainer {
       return;
       
     hasSetLocation = true;
+    
     switch(locationSelector.getSelected()) {
       case 0: /* Do Nothing */ break;
-      case 1: driveBase.setStartLocation(1.0, 1.0, 90); break;
+      case 1: driveBase.setStartLocation(1.0, 1.0, 0); break;
       case 2: driveBase.setStartLocation(1.0, 1.0, 45); break;
-      case 3: driveBase.setStartLocation(1.0, 1.0, 180); break;
+      case 3: driveBase.setStartLocation(1.0, 1.0, -45); break;
       case 4: driveBase.setStartLocation(1.0, 1.0, -90); break;
     }
 
@@ -203,7 +207,7 @@ public class RobotContainer {
         case 0: return new PrintCommand("Do nothing");
         case 1: return new FireCommand(shooter); 
         case 2: return new AutoFireCargo(shooter, Goal.High); 
-        case 3: return new FireAndBackUp(driveBase, shooter, Goal.Low);
+        case 3: return new FireAndBackUp(driveBase, shooter, Goal.High);
       }
       // return autoCommand;
       return selectCommand;

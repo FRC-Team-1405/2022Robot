@@ -4,12 +4,7 @@
 
 package frc.robot.commands;
 
-import java.time.Instant;
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,7 +16,7 @@ public class FireCargo extends SequentialCommandGroup {
     Low,
     High
   }
-  /** Creates a new FireCargo. */
+  
   public FireCargo(Shooter shooter, Goal goal) {
     setName("FireCargo");
 
@@ -41,9 +36,5 @@ public class FireCargo extends SequentialCommandGroup {
       // stop the trigger
       new InstantCommand( shooter::triggerStop )
     );
-  }
-  public class StopFire extends CommandBase{
-    
-
   }
 }

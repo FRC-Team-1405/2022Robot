@@ -7,8 +7,11 @@ package frc.robot.lib.LEDs;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 
+/*
+This is an interface class for creating programs that work with the LEDManager
+*/
 public class LED {
-    public int numLEDs;
+    public final int numLEDs;
 
     //This is to keep track of the led offset in the battery monitor
     LED(int numLEDs) {
@@ -18,7 +21,7 @@ public class LED {
     //Sets the offset to apply to buffer set calls
     public void initialize(int offset) {}
 
-    //Basically like a execute call
+    //Basically like an execute call
     public AddressableLEDBuffer writeData(AddressableLEDBuffer buffer) { return buffer; }
 
     //Used to set the brightness of every color

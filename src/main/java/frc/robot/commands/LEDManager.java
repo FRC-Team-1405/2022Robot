@@ -15,24 +15,26 @@ public class LEDManager extends CommandBase {
   public LEDManager(int port, LED[] ledCommands) {
     this.ledCommands = ledCommands;
 
-    //Set the offset for writing to the AddressableLEDBuffer
-    int ledCount = 0;
+    //Set the offset for writing to the AddressableLEDBuffer with the ledCountOffset
+    int ledCountOffset = 0;
     for (LED ledCommand : ledCommands) {
-      ledCommand.initialize(ledCount);
-      ledCount += ledCommand.numLEDs;
+      ledCommand.initialize(ledCountOffset);
+      ledCountOffset += ledCommand.numLEDs;
     }
 
-    ledStrip = new LEDStrip(port, ledCount);
+    ledStrip = new LEDStrip(port, ledCountOffset);
   }
 
   @Override
   public void execute() {
+    //Loops over all of the led Programs
     for (LED ledCommand : ledCommands) {
       ledStrip.setLedBuffer(ledCommand.writeData(ledStrip.getLedBuffer())); 
     }
     ledStrip.displayLEDBuffer();
   }
 
+  //Without this the command wouldn’t run when scheduled in Robot.java robotInit
   @Override
   public boolean runsWhenDisabled(){
     return true;

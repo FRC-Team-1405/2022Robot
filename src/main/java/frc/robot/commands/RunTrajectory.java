@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveDrive;
 
-/** Add your docs here. */
 public class RunTrajectory extends SequentialCommandGroup{
 
     ProfiledPIDController thetaController =
@@ -21,8 +20,8 @@ public class RunTrajectory extends SequentialCommandGroup{
         0,
         0, 
         0, 
-        new TrapezoidProfile.Constraints(Constants.SwerveBase.maxAngularSpeed, 
-                                            Constants.SwerveBase.maxAngularAccelerartion));
+        new TrapezoidProfile.Constraints(Constants.SwerveBase.MAXANGULARSPEED, 
+                                            Constants.SwerveBase.MAXANGULARACCELERARTION));
 
 public RunTrajectory(Trajectory trajectory, SwerveDrive swerveDrive){ 
     thetaController.enableContinuousInput(-Math.PI, Math.PI); 
@@ -31,7 +30,7 @@ public RunTrajectory(Trajectory trajectory, SwerveDrive swerveDrive){
     new SwerveControllerCommand(
         trajectory,
         swerveDrive::getPose, // Functional interface to feed supplier
-        Constants.SwerveBase.kinematics,
+        Constants.SwerveBase.KINEMATICS,
 
         // Position controllers
         new PIDController(0, 0, 0),  

@@ -8,46 +8,38 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class SwerveDrive extends SubsystemBase {
-  /** Creates a new SwerveDrive. */ 
   //I think we can use these values as our speedlimit, if we make them configureable on Shuffleboard 
-  public static double maxVelocity; 
-  public static double maxAngularSpeed; 
+  public double maxVelocity; 
+  public double maxAngularSpeed; 
    
   //Our swerve modules 
-  private final SwerveModule frontLeft = new SwerveModule(Constants.SwerveBase.driveFrontLeft, Constants.SwerveBase.azimuthFrontLeft, Constants.SwerveBase.encoderFrontLeft, 45); 
-  private final SwerveModule frontRight = new SwerveModule(Constants.SwerveBase.driveFrontRight, Constants.SwerveBase.azimuthFrontRight, Constants.SwerveBase.encoderFrontRight, -45); 
-  private final SwerveModule backLeft = new SwerveModule(Constants.SwerveBase.driveBackLeft, Constants.SwerveBase.azimuthBackLeft, Constants.SwerveBase.encoderBackLeft, -45); 
-  private final SwerveModule backRight = new SwerveModule(Constants.SwerveBase.driveBackRight, Constants.SwerveBase.azimuthBackRight, Constants.SwerveBase.encoderBackRight, 45); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.SwerveBase.DRIVEFRONTLEFT, Constants.SwerveBase.ROTATIONFRONTLEFT, Constants.SwerveBase.ENCODERFRONTLEFT, 45); 
+  private final SwerveModule frontRight = new SwerveModule(Constants.SwerveBase.DRIVEFRONTRIGHT, Constants.SwerveBase.ROTATIONFRONTRIGHT, Constants.SwerveBase.ENCODERFRONTRIGHT, -45); 
+  private final SwerveModule backLeft = new SwerveModule(Constants.SwerveBase.DRIVEBACKLEFT, Constants.SwerveBase.ROTATIONBACKLEFT, Constants.SwerveBase.ENCODERBACKLEFT, -45); 
+  private final SwerveModule backRight = new SwerveModule(Constants.SwerveBase.DRIVEBACKRIGHT, Constants.SwerveBase.ROTATIONBACKRIGHT, Constants.SwerveBase.ENCODERBACKRIGHT, 45); 
   //Our gyro (used to determine robot heading)
   private final AHRS gyro = new AHRS(SPI.Port.kMXP); 
 
-  
-
   private final SwerveDriveOdometry odometry = 
-          new SwerveDriveOdometry(Constants.SwerveBase.kinematics, gyro.getRotation2d()); 
+          new SwerveDriveOdometry(Constants.SwerveBase.KINEMATICS, gyro.getRotation2d()); 
 
   public SwerveDrive() {
     //I am making the maxVelocity configurable so we can ajdust our "speedlimit"
-    Preferences.initDouble("SwerveDrive/Speed Limit", 3); 
-    maxVelocity = Preferences.getDouble("SwerveDrive/Speed Limit", 3) ;
-    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 2); 
-    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 2) ;
+    Preferences.initDouble("SwerveDrive/Speed Limit", 6); 
+    maxVelocity = Preferences.getDouble("SwerveDrive/Speed Limit", 6) ;
+    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 4); 
+    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 4) ;
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
 
@@ -55,7 +47,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
-    SwerveModuleState[] swerveModuleStates = Constants.SwerveBase.kinematics.toSwerveModuleStates(
+    SwerveModuleState[] swerveModuleStates = Constants.SwerveBase.KINEMATICS.toSwerveModuleStates(
       fieldOriented() 
       ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed * maxVelocity, 
                                               ySpeed * maxVelocity, 
@@ -73,7 +65,7 @@ public class SwerveDrive extends SubsystemBase {
     setModuleStates(swerveModuleStates);
   } 
 
-public void updateOdometry(){ 
+  public void updateOdometry(){ 
   odometry.update(gyro.getRotation2d(), frontLeft.getState(), 
                                         frontRight.getState(), 
                                         backLeft.getState(), 
@@ -81,7 +73,7 @@ public void updateOdometry(){
   }
 
   public boolean fieldOriented(){ 
-    return (gyro != null && isFieldOrientedEnabled)  ? true : false;
+    return (gyro != null && isFieldOrientedEnabled) ? true : false;
   }
 
   protected boolean isFieldOrientedEnabled = true;
@@ -92,7 +84,7 @@ public void updateOdometry(){
   // FieldOriented and Gyro control mapped to control stick button on a true/false boolean
 
   public void setStartLocation(double yPos, double xPos, double rotation) {
-    gyro.setAngleAdjustment(rotation);
+    gyro.setAngleAdjustment(rotation - gyro.getAngle());
   } 
 
   public Pose2d getPose(){ 

@@ -4,11 +4,7 @@
 
 package frc.robot.commands;
 
-import java.time.Instant;
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -20,9 +16,9 @@ public class AutoFireCargo extends SequentialCommandGroup {
     Low,
     High
   }
-  /** Creates a new FireCargo. */
+
   public AutoFireCargo(Shooter shooter, Goal goal) {
-    setName("FireCargo");
+    setName("AutoFireCargo");
 
     addCommands(
       // start the flywheel

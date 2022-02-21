@@ -14,9 +14,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.subsystems.SwerveDrive;
 
-/** Add your docs here. */
 public class GenerateTrajectory { 
 
     public static final double maxSpeed = 1; 
@@ -24,17 +22,16 @@ public class GenerateTrajectory {
     private GenerateTrajectory(){} 
 
     private static TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration)
-                                                    .setKinematics(Constants.SwerveBase.kinematics);
+                                                    .setKinematics(Constants.SwerveBase.KINEMATICS);
 
-    public static Trajectory backupOneMeter(Pose2d currentPosition)
-    { 
+    public static Trajectory backupOneMeter(Pose2d currentPosition) { 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory( 
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(0, Units.feetToMeters(1)), new Translation2d(0, Units.feetToMeters(2))),
+            List.of(new Translation2d(0, Units.feetToMeters(-1)), new Translation2d(0, Units.feetToMeters(-2))),
             // End 3 feet straight ahead of where we started, facing forward
-            new Pose2d(Units.feetToMeters(0), Units.feetToMeters(3), new Rotation2d(0)),
+            new Pose2d(Units.feetToMeters(0), Units.feetToMeters(-3), new Rotation2d(0)),
             config);
         return trajectory.relativeTo(currentPosition); 
     } 
