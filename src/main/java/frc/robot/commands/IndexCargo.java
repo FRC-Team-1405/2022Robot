@@ -13,8 +13,8 @@ public class IndexCargo extends SequentialCommandGroup {
   /** Creates a new IndexCargo. */
   public IndexCargo(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addCommands( new InstantCommand(shooter::triggerReverse, shooter),
+    addCommands( new InstantCommand(shooter::indexReverse, shooter),
                  new WaitCommand(0.1),
-                 new InstantCommand(shooter::triggerStop, shooter) ); 
+                 new InstantCommand(shooter::indexStop, shooter) ); 
   }
 }

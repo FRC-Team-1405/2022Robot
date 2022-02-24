@@ -126,9 +126,9 @@ public class RobotContainer {
 
     new JoystickButton(operator, XboxController.Button.kRightBumper.value)
         .whenPressed( new InstantCommand(shooter::triggerFire) )
-        .whenReleased( new SequentialCommandGroup( new InstantCommand(shooter::triggerReverse, shooter),
+        .whenReleased( new SequentialCommandGroup( new InstantCommand(shooter::indexReverse, shooter),
                                                    new WaitCommand(0.1),
-                                                   new InstantCommand(shooter::triggerStop, shooter))); 
+                                                   new InstantCommand(shooter::indexStop, shooter))); 
   }   
 
   private void configureDriverButtons() {

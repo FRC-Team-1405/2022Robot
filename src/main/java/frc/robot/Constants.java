@@ -88,6 +88,6 @@ public final class Constants {
      } 
 
      public final class Shooter{ 
-        public final static double INDEX_SPEED = .5; 
+        public final static double INDEX_SPEED = .85; 
     }
 }

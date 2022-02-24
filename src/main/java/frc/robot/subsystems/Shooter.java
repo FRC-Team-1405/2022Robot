@@ -90,12 +90,18 @@ public class Shooter extends SubsystemBase {
     trigger.set(ControlMode.PercentOutput, 0);
   } 
 
-  public void triggerReverse() {
-    trigger.set(ControlMode.PercentOutput, -.5); 
-  }
-
   public boolean flyWheelReady(){
     return Math.abs(flyWheel.getClosedLoopError()) < 500;
+  } 
+
+  public void indexReverse(){ 
+    trigger.set(ControlMode.PercentOutput, -.5); 
+    flyWheel.set(ControlMode.PercentOutput, -.5);
+  } 
+
+  public void indexStop(){ 
+    triggerStop();
+    flywheelStop();
   }
 
   private void setLowIndex(int value) {
