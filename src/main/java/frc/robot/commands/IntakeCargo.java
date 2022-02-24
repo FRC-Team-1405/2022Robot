@@ -20,7 +20,6 @@ public class IntakeCargo extends CommandBase {
   private Intake intake;
   private Shooter shooter;
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     //intake.dropIntake();
@@ -28,12 +27,10 @@ public class IntakeCargo extends CommandBase {
     shooter.triggerFire();
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     //intake.liftIntake();
     intake.intakeStop();
     shooter.triggerStop();
   }
-
 }

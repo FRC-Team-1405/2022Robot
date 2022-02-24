@@ -23,7 +23,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private LED[] leds = new LED[2];
   private LEDManager ledManager;
 
   /**
@@ -34,11 +33,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(); 
 
     //ledManager can run during disabled
-    leds[0] = new BatteryLED(Constants.BatteryMonitor.LEDCOUNT);
-    leds[1] = new UnderGlow(Constants.UnderGlow.LEDCOUNT);
+    LED[] leds = {
+    new BatteryLED(Constants.BatteryMonitor.LEDCOUNT),
+    new UnderGlow(Constants.UnderGlow.LEDCOUNT)};
 
     ledManager = new LEDManager(Constants.PWMPort.LEDPORT, leds);
     ledManager.schedule(false);
