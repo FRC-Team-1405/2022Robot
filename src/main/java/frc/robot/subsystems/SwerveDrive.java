@@ -17,6 +17,7 @@ import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class SwerveDrive extends SubsystemBase {
   //I think we can use these values as our speedlimit, if we make them configureable on Shuffleboard 
@@ -44,6 +45,14 @@ public class SwerveDrive extends SubsystemBase {
     gyro.reset();
 
     enableFieldOriented(isFieldOrientedEnabled);
+  }
+
+
+  @Override
+  public void periodic() {
+    updateOdometry();
+    SmartDashboard.putNumber("SwerveDrive/Pose/X", getPose().getX());
+    SmartDashboard.putNumber("SwerveDrive/Pose/Y", getPose().getY());
   }
 
   public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 

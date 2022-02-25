@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.Map;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoFireCargo;
+import frc.robot.commands.DevTestAuto;
 import frc.robot.commands.FireAndBackUp;
 import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.FireCargo;
@@ -42,6 +45,9 @@ public class RobotContainer {
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR);
 
+  private UsbCamera camera = new UsbCamera("Drive Camera", 0);
+
+
   public RobotContainer() {
     configureButtonBindings();
     initShuffleBoard();
@@ -49,6 +55,9 @@ public class RobotContainer {
     driveBase.setDefaultCommand(new SwerveDriveCommand(this::getXSpeed, 
                                                        this::getYSpeed, 
                                                        this::getRotationSpeed, driveBase));
+    
+//    camera.setResolution(352, 240);
+    CameraServer.startAutomaticCapture();
   }
 
   public double getXSpeed(){ 
@@ -164,6 +173,7 @@ public class RobotContainer {
     autoSelector.addOption("Shoot Only", 1); 
     autoSelector.addOption("Shoot Only Refactor", 2); 
     autoSelector.addOption("Shoot and Back Up", 3);
+    autoSelector.addOption("Dev Test Auto", 4);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -190,26 +200,15 @@ public class RobotContainer {
 
   } 
 
-  private final Command selectCommand =
-  new SelectCommand(
-      // Maps selector values to commands
-      Map.ofEntries(
-          Map.entry(0, new PrintCommand("Do nothing")),
-          Map.entry(1, new FireCommand(shooter)), 
-          Map.entry(2, new AutoFireCargo(shooter, Goal.High)), 
-          Map.entry(3, new FireAndBackUp(driveBase, shooter, Goal.Low))
-       ),
-      this::autoSelect
-  );
-
-    public Command getAutonomousCommand() {
-      switch (autoSelect()){
-        case 0: return new PrintCommand("Do nothing");
-        case 1: return new FireCommand(shooter); 
-        case 2: return new AutoFireCargo(shooter, Goal.High); 
-        case 3: return new FireAndBackUp(driveBase, shooter, Goal.High);
-      }
+  public Command getAutonomousCommand() {
+    switch (autoSelect()){
+      case 0: return new PrintCommand("Do nothing");
+      case 1: return new FireCommand(shooter); 
+      case 2: return new AutoFireCargo(shooter, Goal.High); 
+      case 3: return new FireAndBackUp(driveBase, shooter, Goal.High);
+      case 4: return new DevTestAuto(driveBase, shooter, Goal.High);
+    }
       // return autoCommand;
-      return selectCommand;
+      return new PrintCommand("Default Do Nothing");
     } 
 }
