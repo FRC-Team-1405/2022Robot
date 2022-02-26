@@ -66,7 +66,8 @@ public class DriveTo extends CommandBase{
         zController.setTolerance(1.0);
 
         if (isRelative) {
-            Pose2d pose = swerve.getPose().transformBy( new Transform2d( new Translation2d(-1,0), Rotation2d.fromDegrees(-180.0) ) );            xController.setGoal( pose.getX() );
+            Pose2d pose = swerve.getPose().transformBy( new Transform2d( new Translation2d(-1,0), Rotation2d.fromDegrees(z) ) );
+            xController.setGoal( pose.getX() );
             yController.setGoal( pose.getY() );
             zController.setGoal( pose.getRotation().getDegrees() );
         } else {
