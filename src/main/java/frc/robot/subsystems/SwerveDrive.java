@@ -51,20 +51,26 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     updateOdometry();
-    SmartDashboard.putNumber("SwerveDrive/Pose/X", getPose().getX());
-    SmartDashboard.putNumber("SwerveDrive/Pose/Y", getPose().getY());
   }
 
-  public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
+  public void drive(double xPercent, double yPercent, double rotationPercent){ 
+    driveSpeed(xPercent * maxVelocity, yPercent * maxVelocity, rotationPercent * maxAngularSpeed, fieldOriented());
+  } 
+
+  public void driveSpeed(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented){
+    SmartDashboard.putNumber("DriveTo/Speed/x", xSpeed);
+    SmartDashboard.putNumber("DriveTo/Speed/y", ySpeed);
+    SmartDashboard.putNumber("DriveTo/Speed/z", rotationSpeed);
+
     SwerveModuleState[] swerveModuleStates = Constants.SwerveBase.KINEMATICS.toSwerveModuleStates(
-      fieldOriented() 
-      ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed * maxVelocity, 
-                                              ySpeed * maxVelocity, 
-                                              rotationSpeed * maxAngularSpeed, 
+      fieldOriented
+      ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
+                                              ySpeed, 
+                                              rotationSpeed, 
                                               Rotation2d.fromDegrees(gyro.getAngle())) 
-      : new ChassisSpeeds(xSpeed * maxVelocity, 
-                          ySpeed * maxVelocity, 
-                          rotationSpeed * maxAngularSpeed)); 
+      : new ChassisSpeeds(xSpeed, 
+                          ySpeed, 
+                          rotationSpeed)); 
     //This function should limit our speed to the value we set (maxVelocity)
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxVelocity); 
@@ -72,13 +78,15 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("angle", gyro.getAngle()); 
     
     setModuleStates(swerveModuleStates);
-  } 
+  }
 
   public void updateOdometry(){ 
-  odometry.update(gyro.getRotation2d(), frontLeft.getState(), 
-                                        frontRight.getState(), 
-                                        backLeft.getState(), 
-                                        backRight.getState());
+    odometry.update(gyro.getRotation2d(), frontLeft.getState(), 
+                                          frontRight.getState(), 
+                                          backLeft.getState(), 
+                                          backRight.getState());
+    SmartDashboard.putNumber("SwerveDrive/Pose/X", odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("SwerveDrive/Pose/Y", odometry.getPoseMeters().getY());
   }
 
   public boolean fieldOriented(){ 

@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.DevTestAuto;
+import frc.robot.commands.DriveToTest;
 import frc.robot.commands.FireAndBackUp;
 import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.FireCargo;
@@ -45,7 +46,7 @@ public class RobotContainer {
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR);
 
-  private UsbCamera camera = new UsbCamera("Drive Camera", 0);
+//  private UsbCamera camera = new UsbCamera("Drive Camera", 0);
 
 
   public RobotContainer() {
@@ -57,7 +58,7 @@ public class RobotContainer {
                                                        this::getRotationSpeed, driveBase));
     
 //    camera.setResolution(352, 240);
-    CameraServer.startAutomaticCapture();
+//    CameraServer.startAutomaticCapture();
   }
 
   public double getXSpeed(){ 
@@ -201,6 +202,8 @@ public class RobotContainer {
   } 
 
   public Command getAutonomousCommand() {
+    return new DriveToTest(driveBase);
+/*
     switch (autoSelect()){
       case 0: return new PrintCommand("Do nothing");
       case 1: return new FireCommand(shooter); 
@@ -210,5 +213,6 @@ public class RobotContainer {
     }
       // return autoCommand;
       return new PrintCommand("Default Do Nothing");
+      */
     } 
 }
