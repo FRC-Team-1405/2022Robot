@@ -33,6 +33,7 @@ import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.OutTake;
 
 public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
@@ -120,7 +121,10 @@ public class RobotContainer {
         .whenReleased( new SequentialCommandGroup( new InstantCommand(shooter::indexReverse, shooter),
                                                    new WaitCommand(0.1),
                                                    new InstantCommand(shooter::indexStop, shooter))); 
-  }   
+
+    new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
+        .whenPressed( new OutTake());
+                                                  }   
 
   private void configureDriverButtons() {
     new JoystickButton(driver, XboxController.Button.kBack.value)
@@ -142,10 +146,7 @@ public class RobotContainer {
         .whenReleased(new IndexCargo(shooter));
 
   new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whenPressed( new SequentialCommandGroup( 
-                          new InstantCommand( intake::dropIntake, intake),
-                          new WaitCommand(0.2),
-                          new InstantCommand( intake::stopIntake, intake)));
+        .whenPressed(new InstantCommand(intake::deployRetractIntake, intake));
 }
 
   private SendableChooser<Integer> locationSelector = new SendableChooser<Integer>(); 
