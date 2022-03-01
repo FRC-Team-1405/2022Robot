@@ -15,7 +15,9 @@ public class Intake extends SubsystemBase {
   public WPI_TalonSRX intakeDropper = new WPI_TalonSRX(Constants.CANID.INTAKE_DROPPER); 
 
   public double INTAKE_UP = -0.5; 
-  public double INTAKE_DOWN = 0.6; 
+  public double INTAKE_DOWN = 0.4; 
+
+  boolean isDeployed = false; 
 
   public Intake() {}
 
@@ -26,11 +28,22 @@ public class Intake extends SubsystemBase {
 
   public void dropIntake(){ 
     intakeDropper.set(ControlMode.PercentOutput, INTAKE_DOWN); 
+    isDeployed = true; 
   } 
 
   public void liftIntake(){ 
     intakeDropper.set(ControlMode.PercentOutput, INTAKE_UP); 
+    isDeployed = false;
   } 
+
+  public void deployRetractIntake(){ 
+    if(isDeployed == true){ 
+      liftIntake(); 
+    } 
+      else { 
+        dropIntake();
+      }
+  }
 
   public void stopIntake(){
     intakeDropper.set(ControlMode.PercentOutput, 0); 
