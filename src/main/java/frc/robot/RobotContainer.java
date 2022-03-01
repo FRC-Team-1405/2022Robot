@@ -78,7 +78,7 @@ public class RobotContainer {
     if (Math.abs(driver.getRightX()) <= 0.1)
       finalRotation = 0.0;
     else
-      finalRotation = driver.getRightX() * 0.5 * (1.0 + driver.getRightTriggerAxis());
+      finalRotation = driver.getRightX() / (1.0 + driver.getRightTriggerAxis());
 
     return finalRotation;
   }

@@ -15,8 +15,8 @@ public class OutTake extends SequentialCommandGroup {
   public Shooter shooter;
   public OutTake() {
     // Use addRequirements() here to declare subsystem dependencies. 
-    addCommands(new InstantCommand(intake::liftIntake, intake), 
-                new InstantCommand(shooter::triggerReverse, shooter));
+    ///addCommands(new InstantCommand(intake::liftIntake, intake), 
+              //  new InstantCommand(shooter::triggerReverse, shooter));
 
   }
 }
