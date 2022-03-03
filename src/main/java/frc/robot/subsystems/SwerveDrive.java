@@ -38,8 +38,8 @@ public class SwerveDrive extends SubsystemBase {
     //I am making the maxVelocity configurable so we can ajdust our "speedlimit"
     Preferences.initDouble("SwerveDrive/Speed Limit", 6); 
     maxVelocity = Preferences.getDouble("SwerveDrive/Speed Limit", 6) ;
-    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 8); 
-    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 8) ;
+    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 6.5); 
+    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 6.5) ;
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
 
