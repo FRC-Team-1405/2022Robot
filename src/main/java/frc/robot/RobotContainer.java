@@ -53,7 +53,6 @@ public class RobotContainer {
   public RobotContainer() {
     configureButtonBindings();
     initShuffleBoard();
-
     driveBase.setDefaultCommand(new SwerveDriveCommand(this::getXSpeed, 
                                                        this::getYSpeed, 
                                                        this::getRotationSpeed, driveBase));
@@ -88,7 +87,7 @@ public class RobotContainer {
     if (Math.abs(driver.getRightX()) <= 0.1)
       finalRotation = 0.0;
     else
-      finalRotation = driver.getRightX() / (1.0 + driver.getRightTriggerAxis());
+      finalRotation = driver.getRightX() * .5 / (1.0 + driver.getRightTriggerAxis());
 
     return finalRotation;
   }

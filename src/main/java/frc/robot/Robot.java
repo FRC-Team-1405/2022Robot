@@ -11,6 +11,7 @@ import frc.robot.commands.LEDManager;
 import frc.robot.lib.LEDs.BatteryLED;
 import frc.robot.lib.LEDs.LED;
 import frc.robot.lib.LEDs.UnderGlow;
+import frc.robot.subsystems.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,7 +24,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private LEDManager ledManager;
+  private LEDManager ledManager; 
+
+  private Intake intake; 
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,14 +37,13 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(); 
-
     //ledManager can run during disabled
     LED[] leds = {
     new BatteryLED(Constants.BatteryMonitor.LEDCOUNT),
-    new UnderGlow(Constants.UnderGlow.LEDCOUNT)};
+    new UnderGlow(Constants.UnderGlow.LEDCOUNT)}; 
 
     ledManager = new LEDManager(Constants.PWMPort.LEDPORT, leds);
-    ledManager.schedule(false);
+    ledManager.schedule(false); 
   }
 
   /**
@@ -89,10 +91,13 @@ public class Robot extends TimedRobot {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
-    // this line or comment it out.
+    // this line or comment it out. 
     m_robotContainer.setStartingLocation();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+    } 
+    if (intake != null){ 
+      intake.stopIntakeDropper();
     }
   }
 
