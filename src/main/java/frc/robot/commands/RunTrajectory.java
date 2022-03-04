@@ -20,13 +20,13 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RunTrajectory extends SequentialCommandGroup{    
 
     private static double x_P = 0.8 ;
-    private static double x_I = 0.001 ;
+    private static double x_I = 0.0 ;
     private static double x_D = 0.0 ;
-    private static double y_P = 0.0 ;
-    private static double y_I = 0.8 ;
-    private static double y_D = 0.001 ;
-    private static double z_P = 0.8 ;
-    private static double z_I = 0.001 ;
+    private static double y_P = 0.8 ;
+    private static double y_I = 0.0 ;
+    private static double y_D = 0.0 ;
+    private static double z_P = 10.0 ;
+    private static double z_I = 0.0 ;
     private static double z_D = 0.0 ;
     static{
         loadConfigs();

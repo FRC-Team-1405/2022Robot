@@ -11,8 +11,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class TurnToAngle extends CommandBase{
 
-    private static double z_P = 0.8 ;
-    private static double z_I = 0.001 ;
+    private static double z_P = 10.0 ;
+    private static double z_I = 0.0 ;
     private static double z_D = 0.0 ;
     static{
         loadConfigs();
@@ -36,6 +36,7 @@ public class TurnToAngle extends CommandBase{
         double angle = swerve.getPose().getRotation().getRadians();
         double speed = zController.calculate( angle );
         setRotation(speed);
+        System.out.printf("%4.1f %4.1f\n", angle, zController.getPositionError());
     }
 
     public boolean isFinished() {
@@ -55,16 +56,16 @@ public class TurnToAngle extends CommandBase{
     private void configPIDs(SwerveSubsystem swerve){
         zController =  new ProfiledPIDController(z_P, z_I, z_D, new TrapezoidProfile.Constraints(swerve.getMaxAngularSpeed(),swerve.getMaxAngularAcceleration()));
         zController.enableContinuousInput(-Math.PI, Math.PI); 
-        zController.setTolerance(Math.PI/100.0);
+        zController.setTolerance((Math.PI*2)/100.0);
     }
 
     private static void loadConfigs(){
-        Preferences.initDouble("RuntTrajectory/Z/P", z_P);
-        Preferences.initDouble("RuntTrajectory/Z/I", z_I);
-        Preferences.initDouble("RuntTrajectory/Z/D", z_D);
-        z_P = Preferences.getDouble("RuntTrajectory/Z/P", z_P);
-        z_I = Preferences.getDouble("RuntTrajectory/Z/I", z_I);
-        z_D = Preferences.getDouble("RuntTrajectory/Z/D", z_D);
+        Preferences.initDouble("TurnToAngle/Z/P", z_P);
+        Preferences.initDouble("TurnToAngle/Z/I", z_I);
+        Preferences.initDouble("TurnToAngle/Z/D", z_D);
+        z_P = Preferences.getDouble("TurnToAngle/Z/P", z_P);
+        z_I = Preferences.getDouble("TurnToAngle/Z/I", z_I);
+        z_D = Preferences.getDouble("TurnToAngle/Z/D", z_D);
     }
 
 }

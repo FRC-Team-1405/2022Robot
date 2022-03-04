@@ -202,8 +202,6 @@ public class RobotContainer {
   } 
 
   public Command getAutonomousCommand() {
-    return new DriveToTest(driveBase);
-/*
     switch (autoSelect()){
       case 0: return new PrintCommand("Do nothing");
       case 1: return new FireCommand(shooter); 
@@ -213,6 +211,5 @@ public class RobotContainer {
     }
       // return autoCommand;
       return new PrintCommand("Default Do Nothing");
-      */
     } 
 }

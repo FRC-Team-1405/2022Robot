@@ -106,7 +106,8 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
   } 
 
   public Pose2d getPose(){ 
-    return odometry.getPoseMeters(); 
+    Pose2d pose = odometry.getPoseMeters();
+    return new Pose2d( pose.getX(), pose.getY(), Rotation2d.fromDegrees(gyro.getAngle()) ); 
   } 
 
   public void setModuleStates(SwerveModuleState[] states){ 
@@ -135,10 +136,10 @@ public double getMaxAcceleration() {
 }
 
 public double getMaxAngularSpeed() {
-    return Math.PI/2.0;
+    return Math.PI*2;
 }
 
 public double getMaxAngularAcceleration() {
-    return Math.PI/4.0;
+    return Math.PI;
 } 
 }
