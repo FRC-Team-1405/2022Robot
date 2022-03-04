@@ -13,6 +13,6 @@ import frc.robot.trajectories.GenerateTrajectory;
 public class FireAndBackUp extends SequentialCommandGroup {
   public FireAndBackUp(SwerveDrive swerveDrive, Shooter shooter, Goal goal) {
     addCommands( new AutoFireCargo(shooter, goal),
-                 new RunTrajectory(GenerateTrajectory.backupOneMeter(swerveDrive.getPose()), swerveDrive));
+                 new RunTrajectory(GenerateTrajectory.backupOneMeter(swerveDrive.getPose(), swerveDrive), swerveDrive));;
   }
 }

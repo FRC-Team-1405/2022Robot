@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -88,5 +89,19 @@ public final class Constants {
 
      public final class Shooter{ 
         public final static double INDEX_SPEED = .85; 
+    }
+
+    // X+ => forward    Y+ => left  (0,0) => Hub center
+    public final static class FieldPositions {
+        public static Translation2d Target          = new Translation2d( Units.inchesToMeters(   0), Units.inchesToMeters(   0) );
+        public static Translation2d Cargo_Left      = new Translation2d( Units.inchesToMeters(-129), Units.inchesToMeters(  82) );
+        public static Translation2d Cargo_Center    = new Translation2d( Units.inchesToMeters(-149), Units.inchesToMeters( -88) );
+        public static Translation2d Cargo_Right     = new Translation2d( Units.inchesToMeters( -26), Units.inchesToMeters(-151) );
+        public static Pose2d        Tarmac_LeftLeft     = new Pose2d();
+        public static Pose2d        Tarmac_LeftCenter   = new Pose2d();
+        public static Pose2d        Tarmac_LeftRight    = new Pose2d();
+        public static Pose2d        Tarmac_RightLeft    = new Pose2d();
+        public static Pose2d        Tarmac_RightCenter  = new Pose2d();
+        public static Pose2d        Tarmac_RightRight   = new Pose2d();
     }
 }

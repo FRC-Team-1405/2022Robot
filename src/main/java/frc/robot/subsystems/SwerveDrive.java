@@ -17,8 +17,9 @@ import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-public class SwerveDrive extends SubsystemBase {
+public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
   //I think we can use these values as our speedlimit, if we make them configureable on Shuffleboard 
   public double maxVelocity; 
   public double maxAngularSpeed; 
@@ -46,16 +47,30 @@ public class SwerveDrive extends SubsystemBase {
     enableFieldOriented(isFieldOrientedEnabled);
   }
 
-  public void drive(double xSpeed, double ySpeed, double rotationSpeed){ 
+
+  @Override
+  public void periodic() {
+    updateOdometry();
+  }
+
+  public void drive(double xPercent, double yPercent, double rotationPercent){ 
+    driveSpeed(xPercent * maxVelocity, yPercent * maxVelocity, rotationPercent * maxAngularSpeed, fieldOriented());
+  } 
+
+  public void driveSpeed(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented){
+    SmartDashboard.putNumber("DriveTo/Speed/x", xSpeed);
+    SmartDashboard.putNumber("DriveTo/Speed/y", ySpeed);
+    SmartDashboard.putNumber("DriveTo/Speed/z", rotationSpeed);
+
     SwerveModuleState[] swerveModuleStates = Constants.SwerveBase.KINEMATICS.toSwerveModuleStates(
-      fieldOriented() 
-      ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed * maxVelocity, 
-                                              ySpeed * maxVelocity, 
-                                              rotationSpeed * maxAngularSpeed, 
+      fieldOriented
+      ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
+                                              ySpeed, 
+                                              rotationSpeed, 
                                               Rotation2d.fromDegrees(gyro.getAngle())) 
-      : new ChassisSpeeds(xSpeed * maxVelocity, 
-                          ySpeed * maxVelocity, 
-                          rotationSpeed * maxAngularSpeed)); 
+      : new ChassisSpeeds(xSpeed, 
+                          ySpeed, 
+                          rotationSpeed)); 
     //This function should limit our speed to the value we set (maxVelocity)
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxVelocity); 
@@ -63,13 +78,15 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("angle", gyro.getAngle()); 
     
     setModuleStates(swerveModuleStates);
-  } 
+  }
 
   public void updateOdometry(){ 
-  odometry.update(gyro.getRotation2d(), frontLeft.getState(), 
-                                        frontRight.getState(), 
-                                        backLeft.getState(), 
-                                        backRight.getState());
+    odometry.update(gyro.getRotation2d(), frontLeft.getState(), 
+                                          frontRight.getState(), 
+                                          backLeft.getState(), 
+                                          backRight.getState());
+    SmartDashboard.putNumber("SwerveDrive/Pose/X", odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("SwerveDrive/Pose/Y", odometry.getPoseMeters().getY());
   }
 
   public boolean fieldOriented(){ 
@@ -85,10 +102,12 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setStartLocation(double yPos, double xPos, double rotation) {
     gyro.setAngleAdjustment(rotation - gyro.getAngle());
+    odometry.resetPosition( new Pose2d(xPos, yPos, Rotation2d.fromDegrees(rotation)), Rotation2d.fromDegrees(rotation) );
   } 
 
   public Pose2d getPose(){ 
-    return odometry.getPoseMeters(); 
+    Pose2d pose = odometry.getPoseMeters();
+    return new Pose2d( pose.getX(), pose.getY(), Rotation2d.fromDegrees(gyro.getAngle()) ); 
   } 
 
   public void setModuleStates(SwerveModuleState[] states){ 
@@ -97,4 +116,30 @@ public class SwerveDrive extends SubsystemBase {
     backLeft.setDesiredState(states[2]);
     backRight.setDesiredState(states[3]);
   }
+
+  @Override
+  public void setPose(Pose2d pose) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public SwerveDriveKinematics getKinematics() {
+    return Constants.SwerveBase.KINEMATICS ;
+  }
+
+  public double getMaxSpeed() {
+    return 3.0;
+}
+
+public double getMaxAcceleration() {
+    return 1.0;
+}
+
+public double getMaxAngularSpeed() {
+    return Math.PI*2;
+}
+
+public double getMaxAngularAcceleration() {
+    return Math.PI;
+} 
 }
