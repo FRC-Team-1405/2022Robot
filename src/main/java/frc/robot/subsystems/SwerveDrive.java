@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-public class SwerveDrive extends SubsystemBase {
+public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
   //I think we can use these values as our speedlimit, if we make them configureable on Shuffleboard 
   public double maxVelocity; 
   public double maxAngularSpeed; 
@@ -39,8 +39,8 @@ public class SwerveDrive extends SubsystemBase {
     //I am making the maxVelocity configurable so we can ajdust our "speedlimit"
     Preferences.initDouble("SwerveDrive/Speed Limit", 6); 
     maxVelocity = Preferences.getDouble("SwerveDrive/Speed Limit", 6) ;
-    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 4); 
-    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 4) ;
+    Preferences.initDouble("SwerveDrive/Rotation Speed Limit", 8); 
+    maxAngularSpeed = Preferences.getDouble("SwerveDrive/Rotation Speed Limit", 8) ;
     //It may be useful to reset the gyro like this every boot-up. I believe we did this our old code
     gyro.reset();
 
@@ -102,6 +102,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setStartLocation(double yPos, double xPos, double rotation) {
     gyro.setAngleAdjustment(rotation - gyro.getAngle());
+    odometry.resetPosition( new Pose2d(xPos, yPos, Rotation2d.fromDegrees(rotation)), Rotation2d.fromDegrees(rotation) );
   } 
 
   public Pose2d getPose(){ 
@@ -114,4 +115,30 @@ public class SwerveDrive extends SubsystemBase {
     backLeft.setDesiredState(states[2]);
     backRight.setDesiredState(states[3]);
   }
+
+  @Override
+  public void setPose(Pose2d pose) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public SwerveDriveKinematics getKinematics() {
+    return Constants.SwerveBase.KINEMATICS ;
+  }
+
+  public double getMaxSpeed() {
+    return 3.0;
+}
+
+public double getMaxAcceleration() {
+    return 1.0;
+}
+
+public double getMaxAngularSpeed() {
+    return Math.PI/2.0;
+}
+
+public double getMaxAngularAcceleration() {
+    return Math.PI/4.0;
+} 
 }
