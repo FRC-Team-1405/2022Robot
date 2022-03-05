@@ -37,7 +37,6 @@ import frc.robot.commands.AutoFireCargo.Goal;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.IntakeCargo;
-import frc.robot.commands.OutTake;
 
 public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
@@ -68,7 +67,6 @@ public class RobotContainer {
     else
       finalX = driver.getLeftY() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
     
-    SmartDashboard.putNumber("xSpeed", finalX);
     return -finalX;
   } 
 
@@ -84,11 +82,12 @@ public class RobotContainer {
 
   public double getRotationSpeed(){ 
     double finalRotation;
-    if (Math.abs(driver.getRightX()) <= 0.1)
-      finalRotation = 0.0;
+    if (Math.abs(driver.getRightX()) <= 0.1) 
+      finalRotation = Math.abs(operator.getRightX()) <= 0.1 ? 0.0 : operator.getRightX() * .5 / (1.0 + operator.getRightTriggerAxis());
     else
       finalRotation = driver.getRightX() * .5 / (1.0 + driver.getRightTriggerAxis());
 
+    
     return finalRotation;
   }
 
@@ -127,13 +126,12 @@ public class RobotContainer {
 
     new JoystickButton(operator, XboxController.Button.kRightBumper.value)
         .whenPressed( new InstantCommand(shooter::triggerFire) )
-        .whenReleased( new SequentialCommandGroup( new InstantCommand(shooter::indexReverse, shooter),
-                                                   new WaitCommand(0.1),
-                                                   new InstantCommand(shooter::indexStop, shooter))); 
+        .whenReleased( new InstantCommand(shooter::triggerStop)); 
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
-        .whenPressed( new OutTake());
-                                                  }   
+        .whenPressed( new InstantCommand(shooter::triggerReverse))
+        .whenReleased(new InstantCommand(shooter::triggerStop)); 
+  }   
 
   private void configureDriverButtons() {
     new JoystickButton(driver, XboxController.Button.kBack.value)
