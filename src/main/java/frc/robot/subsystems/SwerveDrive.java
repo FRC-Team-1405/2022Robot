@@ -119,8 +119,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
 
   @Override
   public void setPose(Pose2d pose) {
-    // TODO Auto-generated method stub
-    
+    odometry.resetPosition( pose, pose.getRotation() );
   }
 
   public SwerveDriveKinematics getKinematics() {

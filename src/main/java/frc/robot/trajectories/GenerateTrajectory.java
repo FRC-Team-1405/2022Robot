@@ -53,9 +53,12 @@ public class GenerateTrajectory {
 
     public static Rotation2d calculateAngle(Pose2d p1, Pose2d p2)
     {
-        double degrees = Math.toDegrees(Math.atan2(p2.getX() - p1.getX(), p2.getY() - p1.getY()));
-        degrees = degrees + Math.ceil( -degrees / 360 ) * 360;
-    
+        double degrees = Math.toDegrees(Math.atan2( p2.getY() - p1.getY(), p2.getX() - p1.getX()));    
         return Rotation2d.fromDegrees(degrees);
+    }
+
+    public static Pose2d pose2dToOrigin(double x, double y){
+        double degrees = Math.toDegrees(Math.atan2(-y, -x));    
+        return new Pose2d(x, y, Rotation2d.fromDegrees(degrees));
     }
 }

@@ -5,9 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.trajectories.GenerateTrajectory;
 
 public final class Constants {
     public final class CANID {
@@ -91,17 +93,19 @@ public final class Constants {
         public final static double INDEX_SPEED = .85; 
     }
 
-    // X+ => forward    Y+ => left  (0,0) => Hub center
-    public final static class FieldPositions {
-        public static Translation2d Target          = new Translation2d( Units.inchesToMeters(   0), Units.inchesToMeters(   0) );
-        public static Translation2d Cargo_Left      = new Translation2d( Units.inchesToMeters(-129), Units.inchesToMeters(  82) );
-        public static Translation2d Cargo_Center    = new Translation2d( Units.inchesToMeters(-149), Units.inchesToMeters( -88) );
-        public static Translation2d Cargo_Right     = new Translation2d( Units.inchesToMeters( -26), Units.inchesToMeters(-151) );
-        public static Pose2d        Tarmac_LeftLeft     = new Pose2d();
-        public static Pose2d        Tarmac_LeftCenter   = new Pose2d();
-        public static Pose2d        Tarmac_LeftRight    = new Pose2d();
-        public static Pose2d        Tarmac_RightLeft    = new Pose2d();
-        public static Pose2d        Tarmac_RightCenter  = new Pose2d();
-        public static Pose2d        Tarmac_RightRight   = new Pose2d();
-    }
+    // X+ => forward    Y+ => left  (0,0) => Hub center CCW => +
+    // Cago angles are towards the goal
+    public final static class FieldPosition {
+        public static Pose2d Target          = new Pose2d( Units.inchesToMeters(   0), Units.inchesToMeters(   0), Rotation2d.fromDegrees(0) );
+        public static Pose2d Cargo_Left      = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-129), Units.inchesToMeters(  82) );
+        public static Pose2d Cargo_Center    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-125), Units.inchesToMeters(  88) );
+        public static Pose2d Cargo_Right     = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters( -26), Units.inchesToMeters(-151) );
+        public static Pose2d Cargo_Back      = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-282), Units.inchesToMeters(-118) );
+        public static Pose2d Tarmac_LeftLeft     = new Pose2d();
+        public static Pose2d Tarmac_LeftCenter   = new Pose2d();
+        public static Pose2d Tarmac_LeftRight    = new Pose2d();
+        public static Pose2d Tarmac_RightLeft    = new Pose2d();
+        public static Pose2d Tarmac_RightCenter  = new Pose2d();
+        public static Pose2d Tarmac_RightRight   = new Pose2d();
+   }
 }
