@@ -40,12 +40,11 @@ public final class Constants {
         //The under glow has 43 leds
         public final static int LEDCOUNT = 40;
 
-        public final static double BRIGHTNESS = 0.2;
+        public final static double BRIGHTNESS = 1;
     }
     
     public final class PWMPort{
-        public final static int UNDERGLOWLEDPORT = 9;
-        public final static int BATTERYLEDPORT = 8;
+        public final static int LEDPORT = 8;
         public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT + UnderGlow.LEDCOUNT;
     };
     public final class Sensors{
@@ -76,6 +75,7 @@ public final class Constants {
 
         //A simple conversion formula to turn encoder velocity (sensor units/100ms) to meters per second 
         public static final double VELOCITYMETERS = 1 / DRIVEMOTORENCODERRESOLUTION * WHEELCIRCUMFERENCE * 1 / GEARATIO * TIMECONSTANTFORCONVERSION;
+
         // A simple conversion formula to turn meters per second to encoder velocity
         public static final double VELOCITYSENSOR = DRIVEMOTORENCODERRESOLUTION * 1 / WHEELCIRCUMFERENCE * GEARATIO * 1 / TIMECONSTANTFORCONVERSION;
     
@@ -84,12 +84,11 @@ public final class Constants {
     
         public static final SwerveDriveKinematics KINEMATICS = 
                 new SwerveDriveKinematics(
-                    new Translation2d(Units.inchesToMeters(13),  Units.inchesToMeters(-13)),    // Front Left
-                    new Translation2d(Units.inchesToMeters(13),  Units.inchesToMeters(13)),     //Front Right
-                    new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(-13)),    //Back Left
-                    new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(13)));    //Back Right
+                    new Translation2d(Units.inchesToMeters(7),  Units.inchesToMeters(-13)),    // Front Left
+                    new Translation2d(Units.inchesToMeters(7),  Units.inchesToMeters(13)),     // Front Right
+                    new Translation2d(Units.inchesToMeters(-19), Units.inchesToMeters(-13)),    // Back Left
+                    new Translation2d(Units.inchesToMeters(-19), Units.inchesToMeters(13)));    // Back Right
      } 
-
      public final class Shooter{ 
         public final static double INDEX_SPEED = .85; 
     }
@@ -98,7 +97,7 @@ public final class Constants {
     // Cago angles are towards the goal
     public final static class FieldPosition {
         public static Pose2d Target          = new Pose2d( Units.inchesToMeters(   0), Units.inchesToMeters(   0), Rotation2d.fromDegrees(0) );
-        public static Pose2d Cargo_Left      = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-129), Units.inchesToMeters(  82) );
+        public static Pose2d Cargo_Left      = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-129), Units.inchesToMeters( -82) );
         public static Pose2d Cargo_Center    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-125), Units.inchesToMeters(  88) );
         public static Pose2d Cargo_Right     = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters( -26), Units.inchesToMeters(-151) );
         public static Pose2d Cargo_Back      = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-282), Units.inchesToMeters(-118) );

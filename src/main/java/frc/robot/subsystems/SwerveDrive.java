@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -81,12 +82,14 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
   }
 
   public void updateOdometry(){ 
-    odometry.update(gyro.getRotation2d(), frontLeft.getState(), 
-                                          frontRight.getState(), 
-                                          backLeft.getState(), 
-                                          backRight.getState());
-    SmartDashboard.putNumber("SwerveDrive/Pose/X", odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("SwerveDrive/Pose/Y", odometry.getPoseMeters().getY());
+    odometry.update( Rotation2d.fromDegrees(-gyro.getAngle()), 
+                     frontLeft.getState(), 
+                     frontRight.getState(), 
+                     backLeft.getState(), 
+                     backRight.getState());
+    // SmartDashboard.putNumber("SwerveDrive/Pose/X", Units.metersToInches(odometry.getPoseMeters().getX()));
+    // SmartDashboard.putNumber("SwerveDrive/Pose/Y", Units.metersToInches(odometry.getPoseMeters().getY()));
+    // SmartDashboard.putNumber("SwerveDrive/Pose/Z", odometry.getPoseMeters().getRotation().getDegrees());
   }
 
   public boolean fieldOriented(){ 

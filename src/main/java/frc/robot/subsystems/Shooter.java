@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -91,8 +92,15 @@ public class Shooter extends SubsystemBase {
     trigger.set(ControlMode.PercentOutput, -.5); 
   }
 
+  private int readyCount = 0;
   public boolean flyWheelReady() {
-    return Math.abs(flyWheel.getClosedLoopError()) < 500;
+    boolean atSpeed = Math.abs(flyWheel.getClosedLoopError()) < 500;
+    if (atSpeed)
+      readyCount += 1;
+    else
+      readyCount = 0;
+
+    return (readyCount > 10);
   } 
 
   public void indexReverse(){ 
@@ -140,6 +148,7 @@ public class Shooter extends SubsystemBase {
   }
 
   private void flywheelSpeed(int speed) {
+    readyCount = 0;
     if (speed == 0) {
       flyWheel.set(ControlMode.PercentOutput, 0);
     } else {

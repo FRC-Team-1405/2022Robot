@@ -58,7 +58,7 @@ public class GenerateTrajectory {
     }
 
     public static Pose2d pose2dToOrigin(double x, double y){
-        double degrees = Math.toDegrees(Math.atan2(-y, -x));    
+        double degrees = -Math.toDegrees(Math.atan2(-y, -x));    
         return new Pose2d(x, y, Rotation2d.fromDegrees(degrees));
     }
 }

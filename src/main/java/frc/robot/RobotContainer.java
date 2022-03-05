@@ -176,11 +176,10 @@ public class RobotContainer {
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
     autoSelector.setDefaultOption("Do Nothing", 0); 
-    autoSelector.addOption("Shoot Only", 1); 
-    autoSelector.addOption("Shoot Only Refactor", 2); 
-    autoSelector.addOption("Shoot and Back Up", 3);
-    autoSelector.addOption("2 Ball Auto", 4);
-    autoSelector.addOption("3 Ball Auto", 5);
+    autoSelector.addOption("Shoot Only",        1); 
+    autoSelector.addOption("Shoot and Back Up", 2);
+    autoSelector.addOption("2 Ball Auto",       3);
+    autoSelector.addOption("3 Ball Auto",       4);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -213,20 +212,19 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     switch (autoSelect()){
       case 0: return new PrintCommand("Do nothing");
-      case 1: return new FireCommand(shooter); 
-      case 2: return new AutoFireCargo(shooter, Goal.High); 
-      case 3: return new FireAndBackUp(driveBase, shooter, Goal.High);
-      case 4: {
+      case 1: return new AutoFireCargo(intake, shooter, Goal.High); 
+      case 2: return new FireAndBackUp(driveBase, intake, shooter, Goal.High);
+      case 3: {
         if (   locationSelector.getSelected() == 1
             || locationSelector.getSelected() == 2
             || locationSelector.getSelected() == 3)
-          return new TwoBallAuto(driveBase, shooter, intake, Goal.High, FieldPosition.Cargo_Left);
+          return new TwoBallAuto(driveBase,  intake, shooter,Goal.High, FieldPosition.Cargo_Left);
         else if (    locationSelector.getSelected() == 4
                   || locationSelector.getSelected() == 5
                   || locationSelector.getSelected() == 6)
-          return new TwoBallAuto(driveBase, shooter, intake, Goal.High, FieldPosition.Cargo_Center);
+          return new TwoBallAuto(driveBase, intake, shooter, Goal.High, FieldPosition.Cargo_Center);
       }
-      case 5: {
+      case 4: {
         if (   locationSelector.getSelected() == 1
             || locationSelector.getSelected() == 2
             || locationSelector.getSelected() == 3)

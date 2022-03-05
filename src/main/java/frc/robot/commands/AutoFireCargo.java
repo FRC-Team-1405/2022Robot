@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class AutoFireCargo extends SequentialCommandGroup {
@@ -17,10 +18,11 @@ public class AutoFireCargo extends SequentialCommandGroup {
     High
   }
 
-  public AutoFireCargo(Shooter shooter, Goal goal) {
+  public AutoFireCargo(Intake intake, Shooter shooter, Goal goal) {
     setName("AutoFireCargo");
 
     addCommands(
+      new InstantCommand( intake::dropIntake ),
       // start the flywheel
       new ConditionalCommand(
          new InstantCommand( shooter::flywheelLowSpeed,  shooter),
