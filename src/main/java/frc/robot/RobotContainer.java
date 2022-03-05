@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import java.lang.reflect.Field;
 import java.util.Map;
+
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -15,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.FireCommand;
 import frc.robot.commands.IndexCargo;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.ThreeBallAuto_Inside;
+import frc.robot.commands.TwoBallAuto;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
@@ -29,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.FieldPosition;
 import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.DevTestAuto;
 import frc.robot.commands.DriveToTest;
@@ -162,11 +167,13 @@ public class RobotContainer {
   SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
 
   private void initShuffleBoard() {
-    locationSelector.setDefaultOption("None", 0);
-    locationSelector.addOption("0 Top Left", 1);
-    locationSelector.addOption("45 Bottom Left", 2);
-    locationSelector.addOption("-45 Top Right", 3);
-    locationSelector.addOption("Bottom Right", 4);
+    locationSelector.setDefaultOption("None",                 0);
+    locationSelector.addOption("Left Side of Left Tarmac",    1);
+    locationSelector.addOption("Center of Left Tarmac",       2);
+    locationSelector.addOption("Right Side of Left Tarac",    3);
+    locationSelector.addOption("Left Side of Right Tarmac",   4);
+    locationSelector.addOption("Center of Right Tarmac",      5);
+    locationSelector.addOption("Right Side of Right Tarmac",  6);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
@@ -174,7 +181,8 @@ public class RobotContainer {
     autoSelector.addOption("Shoot Only", 1); 
     autoSelector.addOption("Shoot Only Refactor", 2); 
     autoSelector.addOption("Shoot and Back Up", 3);
-    autoSelector.addOption("Dev Test Auto", 4);
+    autoSelector.addOption("2 Ball Auto", 4);
+    autoSelector.addOption("3 Ball Auto", 5);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -193,10 +201,13 @@ public class RobotContainer {
     
     switch(locationSelector.getSelected()) {
       case 0: /* Do Nothing */ break;
-      case 1: driveBase.setStartLocation(1.0, 1.0, 0); break;
-      case 2: driveBase.setStartLocation(1.0, 1.0, 45); break;
-      case 3: driveBase.setStartLocation(1.0, 1.0, -45); break;
-      case 4: driveBase.setStartLocation(1.0, 1.0, -90); break;
+      case 1: driveBase.setStartLocation(FieldPosition.Tarmac_LeftLeft);    break;
+      case 2: driveBase.setStartLocation(FieldPosition.Tarmac_LeftCenter);  break;
+      case 3: driveBase.setStartLocation(FieldPosition.Tarmac_LeftRight);   break;
+      case 4: driveBase.setStartLocation(FieldPosition.Tarmac_RightLeft);   break;
+      case 5: driveBase.setStartLocation(FieldPosition.Tarmac_RightCenter); break;
+      case 6: driveBase.setStartLocation(FieldPosition.Tarmac_RightRight);  break;
+      default: /* Do Nothing */ break;
     }
 
   } 
@@ -207,9 +218,32 @@ public class RobotContainer {
       case 1: return new FireCommand(shooter); 
       case 2: return new AutoFireCargo(shooter, Goal.High); 
       case 3: return new FireAndBackUp(driveBase, shooter, Goal.High);
-      case 4: return new DevTestAuto(driveBase, shooter, Goal.High);
+      case 4: {
+        if (   locationSelector.getSelected() == 1
+            || locationSelector.getSelected() == 2
+            || locationSelector.getSelected() == 3)
+          return new TwoBallAuto(driveBase, shooter, intake, Goal.High, FieldPosition.Cargo_Left);
+        else if (    locationSelector.getSelected() == 4
+                  || locationSelector.getSelected() == 5
+                  || locationSelector.getSelected() == 6)
+          return new TwoBallAuto(driveBase, shooter, intake, Goal.High, FieldPosition.Cargo_Center);
+      }
+      case 5: {
+        if (   locationSelector.getSelected() == 1
+            || locationSelector.getSelected() == 2
+            || locationSelector.getSelected() == 3)
+          return new  ThreeBallAuto_Inside( driveBase, shooter, intake, Goal.High, 
+                                            FieldPosition.Cargo_Center, FieldPosition.Tarmac_LeftLeft, 
+                                            FieldPosition.Cargo_Left,   FieldPosition.Tarmac_RightCenter);
+        else if (    locationSelector.getSelected() == 4
+                  || locationSelector.getSelected() == 5
+                  || locationSelector.getSelected() == 6)
+          return new  ThreeBallAuto_Inside( driveBase, shooter, intake, Goal.High, 
+                                            FieldPosition.Cargo_Left,   FieldPosition.Tarmac_RightCenter, 
+                                            FieldPosition.Cargo_Center,  FieldPosition.Tarmac_LeftLeft);
+      }
     }
-      // return autoCommand;
+
       return new PrintCommand("Default Do Nothing");
     } 
 }

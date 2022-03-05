@@ -101,11 +101,12 @@ public final class Constants {
         public static Pose2d Cargo_Center    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-125), Units.inchesToMeters(  88) );
         public static Pose2d Cargo_Right     = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters( -26), Units.inchesToMeters(-151) );
         public static Pose2d Cargo_Back      = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-282), Units.inchesToMeters(-118) );
-        public static Pose2d Tarmac_LeftLeft     = new Pose2d();
-        public static Pose2d Tarmac_LeftCenter   = new Pose2d();
-        public static Pose2d Tarmac_LeftRight    = new Pose2d();
-        public static Pose2d Tarmac_RightLeft    = new Pose2d();
-        public static Pose2d Tarmac_RightCenter  = new Pose2d();
-        public static Pose2d Tarmac_RightRight   = new Pose2d();
+        public static Pose2d Tarmac_LeftLeft     = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-60), Units.inchesToMeters( 68) );
+        public static Pose2d Tarmac_LeftCenter   = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-89), Units.inchesToMeters( 34) );
+        public static Pose2d Tarmac_LeftRight    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-90), Units.inchesToMeters(-11) );
+        public static Pose2d Tarmac_RightLeft    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-68), Units.inchesToMeters(-60) );
+        public static Pose2d Tarmac_RightCenter  = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-32), Units.inchesToMeters(-91) );
+        public static Pose2d Tarmac_RightRight   = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters( 10), Units.inchesToMeters(-92) );
+        public static Pose2d Waypoint_Inside     = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-80), Units.inchesToMeters(  0) );
    }
 }

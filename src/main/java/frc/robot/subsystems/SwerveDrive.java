@@ -100,9 +100,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
   }
   // FieldOriented and Gyro control mapped to control stick button on a true/false boolean
 
-  public void setStartLocation(double yPos, double xPos, double rotation) {
-    gyro.setAngleAdjustment(rotation - gyro.getAngle());
-    odometry.resetPosition( new Pose2d(xPos, yPos, Rotation2d.fromDegrees(rotation)), Rotation2d.fromDegrees(rotation) );
+  public void setStartLocation(Pose2d pose) {
+    gyro.setAngleAdjustment(pose.getRotation().getDegrees() - gyro.getAngle());
+    odometry.resetPosition( pose, pose.getRotation() );
   } 
 
   public Pose2d getPose(){ 
