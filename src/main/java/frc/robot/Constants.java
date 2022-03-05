@@ -107,6 +107,8 @@ public final class Constants {
         public static Pose2d Tarmac_RightLeft    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-68), Units.inchesToMeters(-60) );
         public static Pose2d Tarmac_RightCenter  = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-32), Units.inchesToMeters(-91) );
         public static Pose2d Tarmac_RightRight   = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters( 10), Units.inchesToMeters(-92) );
+        public static Pose2d Tarmac_LeftCargo    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-80), Units.inchesToMeters( 46), true );
+        public static Pose2d Tarmac_RightCargo   = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-69), Units.inchesToMeters(-58), true );
         public static Pose2d Waypoint_Inside     = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-80), Units.inchesToMeters(  0) );
-   }
+  }
 }

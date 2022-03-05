@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FieldPosition;
 import frc.robot.commands.AutoFireCargo;
+import frc.robot.commands.DeadReckonTwoBallAuto;
 import frc.robot.commands.DevTestAuto;
 import frc.robot.commands.DriveToTest;
 import frc.robot.commands.FireAndBackUp;
@@ -172,6 +173,8 @@ public class RobotContainer {
     locationSelector.addOption("Left Side of Right Tarmac",   4);
     locationSelector.addOption("Center of Right Tarmac",      5);
     locationSelector.addOption("Right Side of Right Tarmac",  6);
+    locationSelector.addOption("Left Tarmac facing Cargo",    7);
+    locationSelector.addOption("Right Tarmac facing Cargo",  8);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
@@ -180,6 +183,7 @@ public class RobotContainer {
     autoSelector.addOption("Shoot and Back Up", 2);
     autoSelector.addOption("2 Ball Auto",       3);
     autoSelector.addOption("3 Ball Auto",       4);
+    autoSelector.addOption("Dead Reckoning",    5);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -237,6 +241,9 @@ public class RobotContainer {
           return new  ThreeBallAuto_Inside( driveBase, shooter, intake, Goal.High, 
                                             FieldPosition.Cargo_Left,   FieldPosition.Tarmac_RightCenter, 
                                             FieldPosition.Cargo_Center,  FieldPosition.Tarmac_LeftLeft);
+      }
+      case 5: {
+          return new DeadReckonTwoBallAuto(driveBase, intake, shooter, Goal.High);
       }
     }
 
