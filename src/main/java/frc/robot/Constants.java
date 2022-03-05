@@ -38,13 +38,14 @@ public final class Constants {
     public class UnderGlow{
         //This comment is old so it might not be right
         //The under glow has 43 leds
-        public final static int LEDCOUNT = 0;
+        public final static int LEDCOUNT = 40;
 
         public final static double BRIGHTNESS = 0.2;
     }
     
     public final class PWMPort{
-        public final static int LEDPORT = 8;
+        public final static int UNDERGLOWLEDPORT = 9;
+        public final static int BATTERYLEDPORT = 8;
         public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT + UnderGlow.LEDCOUNT;
     };
     public final class Sensors{
