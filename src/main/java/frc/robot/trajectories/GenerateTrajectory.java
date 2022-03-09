@@ -58,11 +58,16 @@ public class GenerateTrajectory {
     }
 
     public static Pose2d pose2dToOrigin(double x, double y){
-        double degrees = -Math.toDegrees(Math.atan2(-y, -x));    
+        double degrees = Math.toDegrees(Math.atan2(x, y)) + 90.0;    
         return new Pose2d(x, y, Rotation2d.fromDegrees(degrees));
     }
 
     public static Pose2d pose2dToOrigin(double x, double y, boolean flip){
-        return flip ? pose2dToOrigin(-y, -x) : pose2dToOrigin(y, x) ; 
+        if (flip) {
+            // double angle = -pose2dToOrigin(y, x).getRotation().getDegrees() + 90; 
+            double angle = pose2dToOrigin(x, y).getRotation().getDegrees() + 180; 
+            return new Pose2d(x, y, Rotation2d.fromDegrees(angle));
+        }
+        return pose2dToOrigin(y, x) ; 
     }
 }
