@@ -76,7 +76,8 @@ public class SwerveModule extends SubsystemBase {
   /** Returns the current velocity and rotation angle of the swerve module (in meters per second and 
   radians respectively) */
   public SwerveModuleState getState() { 
-    return new SwerveModuleState(getVelocityMetersPerSecond(), Rotation2d.fromDegrees(getAngle())); 
+    final double angle = getAngle() - offsets[steeringMotor.getDeviceID()-ENCODER_BASE] ;
+    return new SwerveModuleState(getVelocityMetersPerSecond(), Rotation2d.fromDegrees( angle )); 
   } 
   /** Allows us to command the swervemodule to any given veloctiy and angle, ultimately coming from our
   joystick inputs. */
