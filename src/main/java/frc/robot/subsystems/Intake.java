@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -15,11 +16,14 @@ public class Intake extends SubsystemBase {
   public WPI_TalonSRX intakeDropper = new WPI_TalonSRX(Constants.CANID.INTAKE_DROPPER); 
 
   public double INTAKE_UP = -0.3; 
-  public double INTAKE_DOWN = 0.3; 
+  public double INTAKE_DOWN = 0.4; 
 
   //boolean isDeployed = false; 
 
-  public Intake() {}
+  public Intake() {
+    Preferences.initDouble("Shooter/Speed/Low", INTAKE_UP);
+    INTAKE_UP = Preferences.getDouble("Shooter/Speed/Low", INTAKE_UP);
+  }
 
   @Override
   public void periodic() {

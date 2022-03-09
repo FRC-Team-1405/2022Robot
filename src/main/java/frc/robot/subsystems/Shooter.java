@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void triggerFire() {
-    trigger.set(ControlMode.PercentOutput, triggerSpeed);
+    trigger.set(ControlMode.PercentOutput, triggerSpeed); 
   }
 
   public void triggerStop() {

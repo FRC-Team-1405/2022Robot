@@ -4,12 +4,14 @@
 
 package frc.robot;
 
+import java.io.FilePermission;
 import java.lang.reflect.Field;
 import java.util.Map;
 
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -50,17 +52,21 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
-  private XboxController operator = new XboxController(Constants.Controller.OPERATOR);
+  private XboxController operator = new XboxController(Constants.Controller.OPERATOR); 
+
+  private PowerDistribution pdp = new PowerDistribution(); 
 
 //  private UsbCamera camera = new UsbCamera("Drive Camera", 0);
 
 
   public RobotContainer() {
     configureButtonBindings();
-    initShuffleBoard();
+    initShuffleBoard(); 
     driveBase.setDefaultCommand(new SwerveDriveCommand(this::getXSpeed, 
                                                        this::getYSpeed, 
-                                                       this::getRotationSpeed, driveBase));
+                                                       this::getRotationSpeed, driveBase)); 
+
+    SmartDashboard.putData(pdp);
     
 //    camera.setResolution(352, 240);
 //    CameraServer.startAutomaticCapture();
@@ -147,11 +153,11 @@ public class RobotContainer {
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
     new JoystickButton(driver, XboxController.Button.kY.value)
-        .whileHeld( new FireCargo(shooter, FireCargo.Goal.High) )
+        .whileHeld( new FireCargo(intake, shooter, FireCargo.Goal.High) )
         .whenReleased( new FireCargoStop(shooter));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
-        .whileHeld( new FireCargo(shooter, FireCargo.Goal.Low) )
+        .whileHeld( new FireCargo(intake, shooter, FireCargo.Goal.Low) )
         .whenReleased(new FireCargoStop(shooter)); 
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
@@ -174,7 +180,7 @@ public class RobotContainer {
     locationSelector.addOption("Center of Right Tarmac",      5);
     locationSelector.addOption("Right Side of Right Tarmac",  6);
     locationSelector.addOption("Left Tarmac facing Cargo",    7);
-    locationSelector.addOption("Right Tarmac facing Cargo",  8);
+    locationSelector.addOption("Right Tarmac facing Cargo",   8);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
@@ -208,6 +214,8 @@ public class RobotContainer {
       case 4: driveBase.setStartLocation(FieldPosition.Tarmac_RightLeft);   break;
       case 5: driveBase.setStartLocation(FieldPosition.Tarmac_RightCenter); break;
       case 6: driveBase.setStartLocation(FieldPosition.Tarmac_RightRight);  break;
+      case 7: driveBase.setStartLocation(FieldPosition.Tarmac_LeftReverse); break;
+      case 8: driveBase.setStartLocation(FieldPosition.Tarmac_RightReverse);break;
       default: /* Do Nothing */ break;
     }
 

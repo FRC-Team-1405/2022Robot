@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class FireCargo extends SequentialCommandGroup {
@@ -17,7 +18,7 @@ public class FireCargo extends SequentialCommandGroup {
     High
   }
   
-  public FireCargo(Shooter shooter, Goal goal) {
+  public FireCargo(Intake intake, Shooter shooter, Goal goal) {
     setName("FireCargo");
 
     addCommands(
@@ -31,10 +32,10 @@ public class FireCargo extends SequentialCommandGroup {
       new WaitUntilCommand( shooter::flyWheelReady ),
 
       // fire until flywheel speed drops
-      new RunCommand( shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+      new RunCommand( () -> {shooter.triggerFire(); intake.intake();}, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
 
       // stop the trigger
-      new InstantCommand( shooter::triggerStop )
+      new InstantCommand( () -> {shooter.triggerStop(); intake.intakeStop();} )
     );
   }
 }
