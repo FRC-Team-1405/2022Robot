@@ -109,6 +109,8 @@ public final class Constants {
         public static Pose2d Tarmac_RightRight   = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters( 10), Units.inchesToMeters(-92) );
         public static Pose2d Tarmac_LeftCargo    = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-80), Units.inchesToMeters( 46), true );
         public static Pose2d Tarmac_RightCargo   = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-69), Units.inchesToMeters(-58), true );
+        public static Pose2d Tarmac_LeftReverse  = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-83), Units.inchesToMeters( 44), true );
+        public static Pose2d Tarmac_RightReverse = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-71), Units.inchesToMeters(-60), true );
         public static Pose2d Waypoint_Inside     = GenerateTrajectory.pose2dToOrigin( Units.inchesToMeters(-80), Units.inchesToMeters(  0) );
   }
 }

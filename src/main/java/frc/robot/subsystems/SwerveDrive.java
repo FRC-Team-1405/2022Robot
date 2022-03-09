@@ -87,9 +87,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
                      frontRight.getState(), 
                      backLeft.getState(), 
                      backRight.getState());
-    // SmartDashboard.putNumber("SwerveDrive/Pose/X", Units.metersToInches(odometry.getPoseMeters().getX()));
-    // SmartDashboard.putNumber("SwerveDrive/Pose/Y", Units.metersToInches(odometry.getPoseMeters().getY()));
-    // SmartDashboard.putNumber("SwerveDrive/Pose/Z", odometry.getPoseMeters().getRotation().getDegrees());
+    SmartDashboard.putNumber("SwerveDrive/Pose/X", Units.metersToInches(odometry.getPoseMeters().getX()));
+    SmartDashboard.putNumber("SwerveDrive/Pose/Y", Units.metersToInches(odometry.getPoseMeters().getY()));
+    SmartDashboard.putNumber("SwerveDrive/Pose/Z", odometry.getPoseMeters().getRotation().getDegrees());
   }
 
   public boolean fieldOriented(){ 
