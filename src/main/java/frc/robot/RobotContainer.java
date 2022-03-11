@@ -21,6 +21,7 @@ import frc.robot.commands.IndexCargo;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.ThreeBallAuto_Inside;
 import frc.robot.commands.TwoBallAuto;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FieldPosition;
 import frc.robot.commands.AutoFireCargo;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DeadReckonTwoBallAuto;
 import frc.robot.commands.DevTestAuto;
 import frc.robot.commands.DriveToTest;
@@ -50,6 +52,7 @@ public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
   private final Shooter shooter = new Shooter(); 
   private final Intake intake = new Intake();
+  private final Climber climber = new Climber();
   
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR); 
@@ -66,10 +69,27 @@ public class RobotContainer {
                                                        this::getYSpeed, 
                                                        this::getRotationSpeed, driveBase)); 
 
+    climber.setDefaultCommand(new ClimbCommand(this::getLeftClimb, this::getRightClimb, climber));
     SmartDashboard.putData(pdp);
     
 //    camera.setResolution(352, 240);
 //    CameraServer.startAutomaticCapture();
+  }
+
+  public double getLeftClimb(){
+    double speed = -operator.getLeftY();
+    if (Math.abs(speed) < 0.3) {
+      speed = 0.0;
+    }
+    return speed;
+  }
+
+  public double getRightClimb(){
+    double speed = -operator.getRightY();
+    if (Math.abs(speed) < 0.3) {
+      speed = 0.0;
+    } 
+    return speed;
   }
 
   public double getXSpeed(){ 
@@ -94,11 +114,14 @@ public class RobotContainer {
 
   public double getRotationSpeed(){ 
     double finalRotation;
-    if (Math.abs(driver.getRightX()) <= 0.1) 
-      finalRotation = Math.abs(operator.getRightX()) <= 0.1 ? 0.0 : operator.getRightX() * .5 / (1.0 + operator.getRightTriggerAxis());
-    else
+
+    // if (Math.abs(driver.getRightX()) <= 0.1)
+    //   finalRotation = Math.abs(operator.getRightX()) <= 0.1 ? 0.0 : operator.getRightX() * .5 / (1.0 + operator.getRightTriggerAxis());
+    // else
       finalRotation = driver.getRightX() * .5 / (1.0 + driver.getRightTriggerAxis());
 
+      if (Math.abs(finalRotation) < 0.1)
+        finalRotation = 0.0;
     
     return finalRotation;
   }
@@ -123,6 +146,10 @@ public class RobotContainer {
       return operator.getPOV() == 180 || operator.getPOV() == 135 || operator.getPOV() == 225;
     });
 
+    Trigger enableClimb = new Trigger( () -> {
+      return operator.getStartButton() && operator.getBackButton();
+    });
+
     new JoystickButton(operator, XboxController.Button.kY.value)
         .and( upTrigger )
         .whenActive( shooter::increaseHighIndex );
@@ -143,6 +170,8 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whenPressed( new InstantCommand(shooter::triggerReverse))
         .whenReleased(new InstantCommand(shooter::triggerStop)); 
+
+    enableClimb.whenActive( climber::enableClimber );
   }   
 
   private void configureDriverButtons() {
@@ -251,7 +280,13 @@ public class RobotContainer {
                                             FieldPosition.Cargo_Center,  FieldPosition.Tarmac_LeftLeft);
       }
       case 5: {
-          return new DeadReckonTwoBallAuto(driveBase, intake, shooter, Goal.High);
+        if (   locationSelector.getSelected() == 1
+            || locationSelector.getSelected() == 2
+            || locationSelector.getSelected() == 3
+            || locationSelector.getSelected() == 7)
+          return new DeadReckonTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
+        else 
+          return new DeadReckonTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
       }
     }
 

@@ -17,6 +17,8 @@ public final class Constants {
         public final static int TRIGGER = 11;
         public final static int PICKUP = 5; 
         public final static int INTAKE_DROPPER = 12;
+        public final static int CLIMBER_LEFT = 13;
+        public final static int CLIMBER_RIGHT = 14;
     };
 
     public final class Controller {

@@ -39,13 +39,13 @@ public class Shooter extends SubsystemBase {
   private int speedLowIndex = 0;
   private int speedHighIndex = 0;
   private int adjustSpeed = -2500;
-  private int idleSpeed = -20000;
+  private int idleSpeed = -30000;
   private int lowSpeed = -20000;
   private int highSpeed = -30000;
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Flywheel Error", flyWheel.getClosedLoopError());
+    // SmartDashboard.putNumber("Flywheel Error", flyWheel.getClosedLoopError());
   }
 
   public void flywheelStop() {

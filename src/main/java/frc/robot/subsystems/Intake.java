@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase {
   public WPI_TalonSRX pickupMotor = new WPI_TalonSRX(Constants.CANID.PICKUP); 
   public WPI_TalonSRX intakeDropper = new WPI_TalonSRX(Constants.CANID.INTAKE_DROPPER); 
 
-  public double INTAKE_UP = -0.3; 
+  public double INTAKE_UP = -0.35; 
   public double INTAKE_DOWN = 0.4; 
 
   //boolean isDeployed = false; 

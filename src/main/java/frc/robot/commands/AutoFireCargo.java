@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -33,12 +34,14 @@ public class AutoFireCargo extends SequentialCommandGroup {
       new WaitUntilCommand( shooter::flyWheelReady ),
 
       // fire for 1 second
-      new RunCommand( shooter::triggerFire, shooter ).withTimeout(3),
+      new ParallelCommandGroup( new RunCommand( shooter::triggerFire, shooter ).withTimeout(3),
+                                new RunCommand( intake::intake, intake) ),
 
       // stop trigger and flywheel
       new InstantCommand( () -> {
           shooter.triggerStop();
           shooter.flywheelStop();
+          intake.intakeStop();
         },
         shooter)
     );

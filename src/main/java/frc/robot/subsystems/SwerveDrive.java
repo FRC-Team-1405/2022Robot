@@ -59,9 +59,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
   } 
 
   public void driveSpeed(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldOriented){
-    SmartDashboard.putNumber("DriveTo/Speed/x", xSpeed);
-    SmartDashboard.putNumber("DriveTo/Speed/y", ySpeed);
-    SmartDashboard.putNumber("DriveTo/Speed/z", rotationSpeed);
+    // SmartDashboard.putNumber("DriveTo/Speed/x", xSpeed);
+    // SmartDashboard.putNumber("DriveTo/Speed/y", ySpeed);
+    // SmartDashboard.putNumber("DriveTo/Speed/z", rotationSpeed);
 
     SwerveModuleState[] swerveModuleStates = Constants.SwerveBase.KINEMATICS.toSwerveModuleStates(
       fieldOriented
@@ -76,7 +76,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxVelocity); 
 
-    SmartDashboard.putNumber("angle", gyro.getAngle()); 
+    // SmartDashboard.putNumber("angle", gyro.getAngle()); 
     
     setModuleStates(swerveModuleStates);
   }
@@ -87,9 +87,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveSubsystem {
                      frontRight.getState(), 
                      backLeft.getState(), 
                      backRight.getState());
-    SmartDashboard.putNumber("SwerveDrive/Pose/X", Units.metersToInches(odometry.getPoseMeters().getX()));
-    SmartDashboard.putNumber("SwerveDrive/Pose/Y", Units.metersToInches(odometry.getPoseMeters().getY()));
-    SmartDashboard.putNumber("SwerveDrive/Pose/Z", odometry.getPoseMeters().getRotation().getDegrees());
+    // SmartDashboard.putNumber("SwerveDrive/Pose/X", Units.metersToInches(odometry.getPoseMeters().getX()));
+    // SmartDashboard.putNumber("SwerveDrive/Pose/Y", Units.metersToInches(odometry.getPoseMeters().getY()));
+    // SmartDashboard.putNumber("SwerveDrive/Pose/Z", odometry.getPoseMeters().getRotation().getDegrees());
   }
 
   public boolean fieldOriented(){ 
