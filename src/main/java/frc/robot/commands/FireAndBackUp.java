@@ -26,7 +26,7 @@ public class FireAndBackUp extends SequentialCommandGroup {
     addCommands(  new InstantCommand( intake::dropIntake ),
                   new AutoFireCargo(intake, shooter, goal),
                   // new RunPath(List.of(targetPos), swerveDrive),
-                  new RunCommand(() -> {swerveDrive.drive(-0.25, 0.0, 0.0);}, swerveDrive).withTimeout(1.0)
+                  new RunCommand(() -> {swerveDrive.driveSpeed(-0.8, 0.0, 0.0, false);}, swerveDrive).withTimeout(2.5)
                   );
 
     }

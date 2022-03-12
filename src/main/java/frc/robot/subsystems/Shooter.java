@@ -45,7 +45,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("Flywheel Error", flyWheel.getClosedLoopError());
+    SmartDashboard.putNumber("Flywheel Error", Math.abs(flyWheel.getClosedLoopError())/500);
   }
 
   public void flywheelStop() {
@@ -94,7 +94,7 @@ public class Shooter extends SubsystemBase {
 
   private int readyCount = 0;
   public boolean flyWheelReady() {
-    boolean atSpeed = Math.abs(flyWheel.getClosedLoopError()) < 500;
+    boolean atSpeed = Math.abs(flyWheel.getClosedLoopError()) < 1500;
     if (atSpeed)
       readyCount += 1;
     else

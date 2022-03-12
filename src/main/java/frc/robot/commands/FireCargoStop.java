@@ -5,13 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class FireCargoStop extends InstantCommand {
-  public FireCargoStop(Shooter shooter) {
+  public FireCargoStop(Shooter shooter, Intake intake) {
     super( () -> {
       shooter.flywheelStop();
       shooter.triggerStop();
+      intake.intakeStop();
     } );
   }
 }

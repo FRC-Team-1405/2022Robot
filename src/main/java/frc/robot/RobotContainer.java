@@ -57,7 +57,7 @@ public class RobotContainer {
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR); 
 
-  private PowerDistribution pdp = new PowerDistribution(); 
+//  private PowerDistribution pdp = new PowerDistribution(); 
 
 //  private UsbCamera camera = new UsbCamera("Drive Camera", 0);
 
@@ -70,7 +70,7 @@ public class RobotContainer {
                                                        this::getRotationSpeed, driveBase)); 
 
     climber.setDefaultCommand(new ClimbCommand(this::getLeftClimb, this::getRightClimb, climber));
-    SmartDashboard.putData(pdp);
+//    SmartDashboard.putData(pdp);
     
 //    camera.setResolution(352, 240);
 //    CameraServer.startAutomaticCapture();
@@ -133,11 +133,11 @@ public class RobotContainer {
   }
 
   private void configureOperatorButtons(){
-    InstantCommand stopCommand = new InstantCommand( shooter::flywheelStop);
-    InstantCommand idleCommand = new InstantCommand( shooter::flywheelIdleSpeed);
-    ConditionalCommand toggleIdleCommand = new ConditionalCommand( idleCommand, stopCommand, shooter::isStopped);
+    // InstantCommand stopCommand = new InstantCommand( shooter::flywheelStop);
+    // InstantCommand idleCommand = new InstantCommand( shooter::flywheelIdleSpeed);
+    // ConditionalCommand toggleIdleCommand = new ConditionalCommand( idleCommand, stopCommand, shooter::isStopped);
 
-    new JoystickButton(operator, XboxController.Button.kB.value).whenPressed( toggleIdleCommand );
+    // new JoystickButton(operator, XboxController.Button.kB.value).whenPressed( toggleIdleCommand );
 
     Trigger upTrigger = new Trigger( () -> {
       return operator.getPOV() == 0 || operator.getPOV() == 45 || operator.getPOV() == 315;
@@ -163,9 +163,9 @@ public class RobotContainer {
         .and( downTrigger )
         .whenActive( shooter::decreaseLowIndex ); 
 
-    new JoystickButton(operator, XboxController.Button.kRightBumper.value)
-        .whenPressed( new InstantCommand(shooter::triggerFire) )
-        .whenReleased( new InstantCommand(shooter::triggerStop)); 
+    // new JoystickButton(operator, XboxController.Button.kRightBumper.value)
+    //     .whenPressed( new InstantCommand(shooter::triggerFire) )
+    //     .whenReleased( new InstantCommand(shooter::triggerStop)); 
 
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
         .whenPressed( new InstantCommand(shooter::triggerReverse))
@@ -183,11 +183,11 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kY.value)
         .whileHeld( new FireCargo(intake, shooter, FireCargo.Goal.High) )
-        .whenReleased( new FireCargoStop(shooter));
+        .whenReleased( new FireCargoStop(shooter, intake));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
         .whileHeld( new FireCargo(intake, shooter, FireCargo.Goal.Low) )
-        .whenReleased(new FireCargoStop(shooter)); 
+        .whenReleased(new FireCargoStop(shooter, intake)); 
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
         .whileHeld(new IntakeCargo(intake, shooter))

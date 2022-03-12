@@ -15,14 +15,16 @@ public class Intake extends SubsystemBase {
   public WPI_TalonSRX pickupMotor = new WPI_TalonSRX(Constants.CANID.PICKUP); 
   public WPI_TalonSRX intakeDropper = new WPI_TalonSRX(Constants.CANID.INTAKE_DROPPER); 
 
-  public double INTAKE_UP = -0.35; 
+  public double INTAKE_UP = -0.4; 
   public double INTAKE_DOWN = 0.4; 
 
   //boolean isDeployed = false; 
 
   public Intake() {
-    Preferences.initDouble("Shooter/Speed/Low", INTAKE_UP);
-    INTAKE_UP = Preferences.getDouble("Shooter/Speed/Low", INTAKE_UP);
+    Preferences.initDouble("Intake/Up", INTAKE_UP);
+    INTAKE_UP = Preferences.getDouble("Intake/Up", INTAKE_UP);
+    Preferences.initDouble("Intake/Down", INTAKE_DOWN);
+    INTAKE_DOWN = Preferences.getDouble("Intake/Dowb", INTAKE_DOWN);
   }
 
   @Override

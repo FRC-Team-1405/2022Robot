@@ -36,7 +36,6 @@ public class TurnToAngle extends CommandBase{
         double angle = swerve.getPose().getRotation().getRadians();
         double speed = zController.calculate( angle );
         setRotation(speed);
-        System.out.printf("%4.1f %4.1f\n", angle, zController.getPositionError());
     }
 
     public boolean isFinished() {
