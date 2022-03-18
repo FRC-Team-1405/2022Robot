@@ -18,7 +18,7 @@ public class FireCargo extends SequentialCommandGroup {
     High
   }
   
-  public FireCargo(Intake intake, Shooter shooter, Goal goal) {
+  public FireCargo(Shooter shooter, Goal goal) {
     setName("FireCargo");
 
     addCommands(
@@ -32,10 +32,10 @@ public class FireCargo extends SequentialCommandGroup {
       new WaitUntilCommand( shooter::flyWheelReady ),
 
       // fire until flywheel speed drops
-      new RunCommand( () -> {shooter.triggerFire(); intake.intake();}, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+      new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
 
       // stop the trigger
-      new InstantCommand( () -> {shooter.triggerStop(); intake.intakeStop();} )
+      new InstantCommand(shooter::triggerStop) 
     );
   }
 }

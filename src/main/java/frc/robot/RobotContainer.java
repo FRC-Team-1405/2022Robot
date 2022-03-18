@@ -12,6 +12,7 @@ import java.util.Map;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -182,19 +184,19 @@ public class RobotContainer {
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
     new JoystickButton(driver, XboxController.Button.kY.value)
-        .whileHeld( new FireCargo(intake, shooter, FireCargo.Goal.High) )
+        .whileHeld( new SequentialCommandGroup(new IndexCargo(shooter), new FireCargo(shooter, FireCargo.Goal.High)) )
         .whenReleased( new FireCargoStop(shooter, intake));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
-        .whileHeld( new FireCargo(intake, shooter, FireCargo.Goal.Low) )
+        .whileHeld(new SequentialCommandGroup(new IndexCargo(shooter), new FireCargo(shooter, FireCargo.Goal.Low) ))
         .whenReleased(new FireCargoStop(shooter, intake)); 
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileHeld(new IntakeCargo(intake, shooter))
-        .whenReleased(new IndexCargo(shooter));
+        .whileHeld(new ParallelCommandGroup(new InstantCommand(intake::dropIntake), new IntakeCargo(intake, shooter)) )
+        .whenReleased(new InstantCommand(intake::liftIntake));
 
-  new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whenPressed(new InstantCommand(intake::deployRetractIntake, intake));
+  // new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+  //       .whenPressed(new InstantCommand(intake::deployRetractIntake, intake));
 }
 
   private SendableChooser<Integer> locationSelector = new SendableChooser<Integer>(); 

@@ -89,7 +89,7 @@ public class Shooter extends SubsystemBase {
   } 
 
   public void triggerReverse() {
-    trigger.set(ControlMode.PercentOutput, -.5); 
+    trigger.set(ControlMode.PercentOutput, -.4); 
   }
 
   private int readyCount = 0;
@@ -105,7 +105,7 @@ public class Shooter extends SubsystemBase {
 
   public void indexReverse(){ 
     trigger.set(ControlMode.PercentOutput, -.5); 
-    flyWheel.set(ControlMode.PercentOutput, .5);
+    //flyWheel.set(ControlMode.PercentOutput, .5);
   } 
 
   public void indexStop(){ 

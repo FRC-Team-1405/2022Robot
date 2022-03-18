@@ -86,13 +86,13 @@ public final class Constants {
     
         public static final SwerveDriveKinematics KINEMATICS = 
                 new SwerveDriveKinematics(
-                    new Translation2d(Units.inchesToMeters(7),  Units.inchesToMeters(-13)),    // Front Left
-                    new Translation2d(Units.inchesToMeters(7),  Units.inchesToMeters(13)),     // Front Right
-                    new Translation2d(Units.inchesToMeters(-19), Units.inchesToMeters(-13)),    // Back Left
-                    new Translation2d(Units.inchesToMeters(-19), Units.inchesToMeters(13)));    // Back Right
+                    new Translation2d(Units.inchesToMeters(13),  Units.inchesToMeters(-13)),    // Front Left
+                    new Translation2d(Units.inchesToMeters(13),  Units.inchesToMeters(13)),     // Front Right
+                    new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(-13)),    // Back Left
+                    new Translation2d(Units.inchesToMeters(-13), Units.inchesToMeters(13)));    // Back Right
      } 
      public final class Shooter{ 
-        public final static double INDEX_SPEED = .85; 
+        public final static double INDEX_SPEED = .425; 
     }
 
     // X+ => forward    Y+ => left  (0,0) => Hub center CCW => +
