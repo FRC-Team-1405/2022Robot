@@ -207,25 +207,18 @@ public class RobotContainer {
   SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
 
   private void initShuffleBoard() {
-    locationSelector.setDefaultOption("None",                 0);
-    locationSelector.addOption("Left Side of Left Tarmac",    1);
-    locationSelector.addOption("Center of Left Tarmac",       2);
-    locationSelector.addOption("Right Side of Left Tarac",    3);
-    locationSelector.addOption("Left Side of Right Tarmac",   4);
-    locationSelector.addOption("Center of Right Tarmac",      5);
-    locationSelector.addOption("Right Side of Right Tarmac",  6);
-    locationSelector.addOption("Left Tarmac facing Cargo",    7);
-    locationSelector.addOption("Right Tarmac facing Cargo",   8);
+    locationSelector.setDefaultOption("None",                     0);
+    locationSelector.addOption("Left Side of Left Tarmac",        1);
+    locationSelector.addOption("Left Tarmac facing Cargo",        2);
+    locationSelector.addOption("Right Tarmac facing Cargo",       3);
+    locationSelector.addOption("Far Right Tarmac facing Cargo",   4);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
     autoSelector.setDefaultOption("Do Nothing",  0); 
-    autoSelector.addOption("Shoot Only",         1); 
-    autoSelector.addOption("Shoot and Back Up",  2);
-    autoSelector.addOption("2 Ball Auto",        3);
-    autoSelector.addOption("3 Ball Auto",        4);
-    autoSelector.addOption("Timed Reckoning",    5);
-    autoSelector.addOption("Distance Reckoning", 6);
+    autoSelector.addOption("Shoot and Back Up",  1);
+    autoSelector.addOption("Timed Reckoning",    2);
+    autoSelector.addOption("Distance Reckoning", 3);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -245,13 +238,9 @@ public class RobotContainer {
     switch(locationSelector.getSelected()) {
       case 0: /* Do Nothing */ break;
       case 1: driveBase.setStartLocation(FieldPosition.Tarmac_LeftLeft);    break;
-      case 2: driveBase.setStartLocation(FieldPosition.Tarmac_LeftCenter);  break;
-      case 3: driveBase.setStartLocation(FieldPosition.Tarmac_LeftRight);   break;
-      case 4: driveBase.setStartLocation(FieldPosition.Tarmac_RightLeft);   break;
-      case 5: driveBase.setStartLocation(FieldPosition.Tarmac_RightCenter); break;
-      case 6: driveBase.setStartLocation(FieldPosition.Tarmac_RightRight);  break;
-      case 7: driveBase.setStartLocation(FieldPosition.Tarmac_LeftReverse); break;
-      case 8: driveBase.setStartLocation(FieldPosition.Tarmac_RightReverse);break;
+      case 2: driveBase.setStartLocation(FieldPosition.Tarmac_LeftReverse); break;
+      case 3: driveBase.setStartLocation(FieldPosition.Tarmac_RightReverse);break;
+      case 4: driveBase.setStartLocation(FieldPosition.Tarmac_FarRightReverse);break;
       default: /* Do Nothing */ break;
     }
 
@@ -260,46 +249,17 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     switch (autoSelect()){
       case 0: return new PrintCommand("Do nothing");
-      case 1: return new AutoFireCargo(intake, shooter, Goal.High); 
-      case 2: return new FireAndBackUp(driveBase, intake, shooter, Goal.High);
-      case 3: {
-        if (   locationSelector.getSelected() == 1
-            || locationSelector.getSelected() == 2
-            || locationSelector.getSelected() == 3)
-          return new TwoBallAuto(driveBase,  intake, shooter,Goal.High, FieldPosition.Cargo_Left);
-        else if (    locationSelector.getSelected() == 4
-                  || locationSelector.getSelected() == 5
-                  || locationSelector.getSelected() == 6)
-          return new TwoBallAuto(driveBase, intake, shooter, Goal.High, FieldPosition.Cargo_Center);
-      }
-      case 4: {
-        if (   locationSelector.getSelected() == 1
-            || locationSelector.getSelected() == 2
-            || locationSelector.getSelected() == 3)
-          return new  ThreeBallAuto_Inside( driveBase, shooter, intake, Goal.High, 
-                                            FieldPosition.Cargo_Center, FieldPosition.Tarmac_LeftLeft, 
-                                            FieldPosition.Cargo_Left,   FieldPosition.Tarmac_RightCenter);
-        else if (    locationSelector.getSelected() == 4
-                  || locationSelector.getSelected() == 5
-                  || locationSelector.getSelected() == 6)
-          return new  ThreeBallAuto_Inside( driveBase, shooter, intake, Goal.High, 
-                                            FieldPosition.Cargo_Left,   FieldPosition.Tarmac_RightCenter, 
-                                            FieldPosition.Cargo_Center,  FieldPosition.Tarmac_LeftLeft);
-      }
-      case 5: {
-        if (   locationSelector.getSelected() == 1
-            || locationSelector.getSelected() == 2
-            || locationSelector.getSelected() == 3
-            || locationSelector.getSelected() == 7)
+      case 1: return new FireAndBackUp(driveBase, intake, shooter, Goal.High);
+      case 2: {
+        if (   locationSelector.getSelected() == 2
+            || locationSelector.getSelected() == 4)
           return new TimedTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
         else 
           return new TimedTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
       }
-      case 6: {
-        if (   locationSelector.getSelected() == 1
-            || locationSelector.getSelected() == 2
-            || locationSelector.getSelected() == 3
-            || locationSelector.getSelected() == 7)
+      case 3: {
+        if (   locationSelector.getSelected() == 2
+            || locationSelector.getSelected() == 4)
           return new DistanceTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
         else 
           return new DistanceTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
