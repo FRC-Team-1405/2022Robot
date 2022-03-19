@@ -42,8 +42,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FieldPosition;
 import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.ClimbCommand;
-import frc.robot.commands.DeadReckonTwoBallAuto;
+import frc.robot.commands.TimedTwoBallAuto;
 import frc.robot.commands.DevTestAuto;
+import frc.robot.commands.DistanceTwoBallAuto;
 import frc.robot.commands.DriveToTest;
 import frc.robot.commands.FireAndBackUp;
 import frc.robot.commands.AutoFireCargo.Goal;
@@ -218,12 +219,13 @@ public class RobotContainer {
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
-    autoSelector.setDefaultOption("Do Nothing", 0); 
-    autoSelector.addOption("Shoot Only",        1); 
-    autoSelector.addOption("Shoot and Back Up", 2);
-    autoSelector.addOption("2 Ball Auto",       3);
-    autoSelector.addOption("3 Ball Auto",       4);
-    autoSelector.addOption("Dead Reckoning",    5);
+    autoSelector.setDefaultOption("Do Nothing",  0); 
+    autoSelector.addOption("Shoot Only",         1); 
+    autoSelector.addOption("Shoot and Back Up",  2);
+    autoSelector.addOption("2 Ball Auto",        3);
+    autoSelector.addOption("3 Ball Auto",        4);
+    autoSelector.addOption("Timed Reckoning",    5);
+    autoSelector.addOption("Distance Reckoning", 6);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }
@@ -289,9 +291,18 @@ public class RobotContainer {
             || locationSelector.getSelected() == 2
             || locationSelector.getSelected() == 3
             || locationSelector.getSelected() == 7)
-          return new DeadReckonTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
+          return new TimedTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
         else 
-          return new DeadReckonTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
+          return new TimedTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
+      }
+      case 6: {
+        if (   locationSelector.getSelected() == 1
+            || locationSelector.getSelected() == 2
+            || locationSelector.getSelected() == 3
+            || locationSelector.getSelected() == 7)
+          return new DistanceTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
+        else 
+          return new DistanceTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
       }
     }
 

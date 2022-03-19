@@ -72,6 +72,8 @@ public class SwerveModule extends SubsystemBase {
     String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotorID);
     Preferences.initDouble(prefKey, offsets[steeringMotorID-ENCODER_BASE]);
     offsets[steeringMotorID-ENCODER_BASE] =  Preferences.getDouble(prefKey, offsets[steeringMotorID-ENCODER_BASE]);
+
+    getDistance();
   } 
   /** Returns the current velocity and rotation angle of the swerve module (in meters per second and 
   radians respectively) */
@@ -156,5 +158,14 @@ public class SwerveModule extends SubsystemBase {
     offsets[steeringMotor.getDeviceID()-ENCODER_BASE] = getAngle();
     String prefKey = String.format("SwerveModule/Offset_%02d", steeringMotor.getDeviceID());
     Preferences.setDouble(prefKey, offsets[steeringMotor.getDeviceID()-ENCODER_BASE]);
+  }
+
+  public double distance ;
+  public double getDistance() {
+    // double current = driveMotor.getSelectedSensorPosition() ;
+    double current = driveMotor.getSensorCollection().getIntegratedSensorPosition();
+    double delta = Math.abs(current - distance);
+    distance = current;
+    return delta;
   }
 }

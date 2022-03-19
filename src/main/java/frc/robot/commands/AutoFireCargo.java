@@ -31,7 +31,7 @@ public class AutoFireCargo extends SequentialCommandGroup {
     setName("AutoFireCargo");
 
     addCommands(
-      new InstantCommand( intake::dropIntake ),
+      new IndexCargo(shooter),
       // start the flywheel
       new ConditionalCommand(
          new InstantCommand( shooter::flywheelLowSpeed,  shooter),
@@ -43,8 +43,8 @@ public class AutoFireCargo extends SequentialCommandGroup {
 
       // fire until flywheel speed drops
       new RunCommand( () -> {shooter.triggerFire(); intake.intake();}, shooter)
-        .withInterrupt( () -> { return !shooter.flyWheelReady(); })
-        .withTimeout(5),
+        .withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+        // .withTimeout(5),
 
       // stop trigger and flywheel
       new InstantCommand( () -> {
@@ -61,8 +61,8 @@ public class AutoFireCargo extends SequentialCommandGroup {
 
       // fire until flywheel speed drops
       new RunCommand( () -> {shooter.triggerFire(); intake.intake();}, shooter)
-        .withInterrupt( () -> { return !shooter.flyWheelReady(); })
-        .withTimeout(6),
+        .withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+        // .withTimeout(6),
 
       // stop trigger and flywheel
       new InstantCommand( () -> {

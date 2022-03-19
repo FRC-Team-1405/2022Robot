@@ -1,5 +1,9 @@
 package frc.robot.sensor;
 
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.Counter;
@@ -30,8 +34,7 @@ public class LidarLitePWM {
         // Configure for measuring rising to falling pulses
         counter.setSemiPeriodMode(true);
         counter.reset(); 
-        
-    }
+   }
 
     /**
      * Take a measurement and return the distance in cm

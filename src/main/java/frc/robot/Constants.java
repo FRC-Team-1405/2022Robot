@@ -28,26 +28,25 @@ public final class Constants {
     };
 
     public final class BatteryMonitor {
-        public final static double MAXVOLTAGE = 12.5;
+        public final static double MAXVOLTAGE = 12.8;
         public final static double MINVOLTAGE = 9;
         //LEDCOUNT has to be a multiple of 3
         public final static int METERCOUNT = 15;
         public final static int LEDCOUNT = METERCOUNT * 2;
 
+        //20% brightness
         public final static double BRIGHTNESS = 0.2;
     };
 
     public class UnderGlow{
-        //This comment is old so it might not be right
-        //The under glow has 43 leds
         public final static int LEDCOUNT = 40;
 
-        public final static double BRIGHTNESS = 1;
+        //100% brightness
+        public final static double BRIGHTNESS = 1.0;
     }
     
     public final class PWMPort{
         public final static int LEDPORT = 8;
-        public final static int TOTALLEDCOUNT = BatteryMonitor.LEDCOUNT + UnderGlow.LEDCOUNT;
     };
     public final class Sensors{
         public final static int ULTRASONICSENSOR = 3;
@@ -69,7 +68,8 @@ public final class Constants {
         public final static int ENCODERBACKRIGHT = 34; 
 
         public final static double WHEELRADIUS = 0.0508; 
-        public final static double WHEELCIRCUMFERENCE = WHEELRADIUS * 2 * Math.PI;
+        // public final static double WHEELCIRCUMFERENCE = WHEELRADIUS * 2 * Math.PI;
+        public final static double WHEELCIRCUMFERENCE = Units.inchesToMeters(12.875);
         public final static double DRIVEMOTORENCODERRESOLUTION = 2048;  
         //For converting 100 milleseconds (heretofore referred to as 'ms') to seconds 
         public static final double TIMECONSTANTFORCONVERSION = 10; 
