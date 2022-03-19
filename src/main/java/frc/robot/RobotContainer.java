@@ -11,6 +11,7 @@ import java.util.Map;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.XboxController;
@@ -46,13 +47,15 @@ import frc.robot.commands.DevTestAuto;
 import frc.robot.commands.DriveToTest;
 import frc.robot.commands.FireAndBackUp;
 import frc.robot.commands.AutoFireCargo.Goal;
+import frc.robot.sensor.LidarLitePWM;
 import frc.robot.commands.FireCargo;
 import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.IntakeCargo;
 
 public class RobotContainer {
+  private final LidarLitePWM lidar = new LidarLitePWM( new DigitalInput(0) );
   private final SwerveDrive driveBase = new SwerveDrive(); 
-  private final Shooter shooter = new Shooter(); 
+  private final Shooter shooter = new Shooter(lidar); 
   private final Intake intake = new Intake();
   private final Climber climber = new Climber();
   

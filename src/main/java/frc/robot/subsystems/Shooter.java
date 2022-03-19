@@ -8,19 +8,25 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.sensor.LidarLitePWM;
 import frc.robot.sensor.UltrasonicSensor;
 
 public class Shooter extends SubsystemBase {
   TalonSRX flyWheel = new WPI_TalonSRX(Constants.CANID.FLYWHEEL);
   WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CANID.TRIGGER); 
   UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Constants.Sensors.ULTRASONICSENSOR);
+  LidarLitePWM lidar;
 
-  public Shooter() {
+  public Shooter(LidarLitePWM lidar) {
+    this.lidar = lidar;
+    
     Preferences.initInt("Shooter/Speed/Low", lowSpeed);
     lowSpeed = Preferences.getInt("Shooter/Speed/Low", lowSpeed);
     Preferences.initInt("Shooter/Speed/High", highSpeed);
@@ -32,9 +38,15 @@ public class Shooter extends SubsystemBase {
     Preferences.initDouble("Shooter/Trigger/Speed", triggerSpeed);
     triggerSpeed = Preferences.getDouble("Shooter/Trigger/Speed", triggerSpeed);
 
+    Preferences.initDouble("Shooter/Distance/Close", distanceClose);
+    distanceClose = Preferences.getDouble("Shooter/Distance/Close", distanceClose);
+    Preferences.initDouble("Shooter/Distance/Far", distanceFar);
+    distanceClose = Preferences.getDouble("Shooter/Distance/Far", distanceClose);
+
     setLowIndex(speedLowIndex);
     setHighIndex(speedHighIndex);
   }
+
   private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
   private int speedLowIndex = 0;
   private int speedHighIndex = 0;
@@ -43,9 +55,16 @@ public class Shooter extends SubsystemBase {
   private int lowSpeed = -20000;
   private int highSpeed = -30000;
 
+  private double distanceClose = 100.0;
+  private double distanceFar   = 200.0;
+
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Flywheel Error", Math.abs(flyWheel.getClosedLoopError())/500);
+    double distance = lidar.getDistance();
+
+    SmartDashboard.putNumber("Shooter/Flywheel Error", Math.abs(flyWheel.getClosedLoopError())/500);
+    SmartDashboard.putBoolean("Shooter/Distance/Close", distance < distanceClose);
+    SmartDashboard.putBoolean("Shooter/Distance/Far", distance > distanceFar);
   }
 
   public void flywheelStop() {
