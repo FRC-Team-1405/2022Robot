@@ -188,11 +188,11 @@ public class RobotContainer {
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
     new JoystickButton(driver, XboxController.Button.kY.value)
-        .whileHeld( new SequentialCommandGroup(new IndexCargo(shooter), new FireCargo(shooter, FireCargo.Goal.High)) )
+        .whileHeld(new FireCargo(shooter, FireCargo.Goal.High))
         .whenReleased( new FireCargoStop(shooter, intake));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
-        .whileHeld(new SequentialCommandGroup(new IndexCargo(shooter), new FireCargo(shooter, FireCargo.Goal.Low) ))
+        .whileHeld(new FireCargo(shooter, FireCargo.Goal.Low))
         .whenReleased(new FireCargoStop(shooter, intake)); 
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
@@ -217,8 +217,8 @@ public class RobotContainer {
   
     autoSelector.setDefaultOption("Do Nothing",  0); 
     autoSelector.addOption("Shoot and Back Up",  1);
-    autoSelector.addOption("Timed Reckoning",    2);
-    autoSelector.addOption("Distance Reckoning", 3);
+    autoSelector.addOption("Timed 2 Ball",    2);
+    autoSelector.addOption("Distance 2 Ball", 3);
 
     Shuffleboard.getTab("Auto").add("Auto", autoSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   }

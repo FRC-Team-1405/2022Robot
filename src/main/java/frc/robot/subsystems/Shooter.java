@@ -50,10 +50,10 @@ public class Shooter extends SubsystemBase {
   private double triggerSpeed = Constants.Shooter.INDEX_SPEED;
   private int speedLowIndex = 0;
   private int speedHighIndex = 0;
-  private int adjustSpeed = -2500;
-  private int idleSpeed = -30000;
-  private int lowSpeed = -20000;
-  private int highSpeed = -30000;
+  private int adjustSpeed = 1000;
+  private int idleSpeed = 5000;
+  private int lowSpeed = 5000;
+  private int highSpeed = 10000;
 
   private double distanceClose = 100.0;
   private double distanceFar   = 200.0;
@@ -113,7 +113,7 @@ public class Shooter extends SubsystemBase {
 
   private int readyCount = 0;
   public boolean flyWheelReady() {
-    boolean atSpeed = Math.abs(flyWheel.getClosedLoopError()) < 1500;
+    boolean atSpeed = Math.abs(flyWheel.getClosedLoopError()) < 500;
     if (atSpeed)
       readyCount += 1;
     else
@@ -123,8 +123,8 @@ public class Shooter extends SubsystemBase {
   } 
 
   public void indexReverse(){ 
-    trigger.set(ControlMode.PercentOutput, -.5); 
-    //flyWheel.set(ControlMode.PercentOutput, .5);
+      trigger.set(ControlMode.PercentOutput, -.5); 
+      flyWheel.set(ControlMode.PercentOutput, -.15);
   } 
 
   public void indexStop(){ 

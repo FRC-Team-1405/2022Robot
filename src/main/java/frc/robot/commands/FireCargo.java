@@ -23,20 +23,41 @@ public class FireCargo extends SequentialCommandGroup {
     setName("FireCargo");
 
     addCommands(
+      new IndexCargo(shooter),
+
       // start the flywheel
       new ConditionalCommand(
          new InstantCommand( shooter::flywheelLowSpeed,  shooter),
          new InstantCommand( shooter::flywheelHighSpeed, shooter),
          () -> { return goal == Goal.Low; } ),
       
-      // wait for the flywyeel to get up to speed
-      new WaitUntilCommand( shooter::flyWheelReady ),
+        // wait for the flywyeel to get up to speed
+        new WaitUntilCommand( shooter::flyWheelReady ),
+        // fire until flywheel speed drops
+        new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+        // stop the trigger
+        new InstantCommand(shooter::triggerStop),
 
-      // fire until flywheel speed drops
-      new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+        // wait for the flywyeel to get up to speed
+        new WaitUntilCommand( shooter::flyWheelReady ),
+        // fire until flywheel speed drops
+        new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+        // stop the trigger
+        new InstantCommand(shooter::triggerStop),  
 
-      // stop the trigger
-      new InstantCommand(shooter::triggerStop) 
-    );
+        // wait for the flywyeel to get up to speed
+        new WaitUntilCommand( shooter::flyWheelReady ),
+        // fire until flywheel speed drops
+        new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+        // stop the trigger
+        new InstantCommand(shooter::triggerStop), 
+
+        // wait for the flywyeel to get up to speed
+        new WaitUntilCommand( shooter::flyWheelReady ),
+        // fire until flywheel speed drops
+        new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
+        // stop the trigger
+        new InstantCommand(shooter::triggerStop) 
+      );
   }
 }
