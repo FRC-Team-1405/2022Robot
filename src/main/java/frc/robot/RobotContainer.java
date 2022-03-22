@@ -201,8 +201,8 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(intake::liftIntake));
 
   new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whileHeld(new InstantCommand(shooter::triggerFire, shooter))
-        .whenReleased(new InstantCommand(shooter::triggerStop, shooter)); 
+        .whileHeld(new InstantCommand(shooter::triggerFire))
+        .whenReleased(new InstantCommand(shooter::triggerStop)); 
 }
 
   private SendableChooser<Integer> locationSelector = new SendableChooser<Integer>(); 

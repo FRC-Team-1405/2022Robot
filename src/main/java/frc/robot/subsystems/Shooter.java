@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,7 +21,7 @@ import frc.robot.sensor.LidarLitePWM;
 import frc.robot.sensor.UltrasonicSensor;
 
 public class Shooter extends SubsystemBase {
-  TalonSRX flyWheel = new WPI_TalonSRX(Constants.CANID.FLYWHEEL);
+  TalonFX flyWheel = new WPI_TalonFX(Constants.CANID.FLYWHEEL);
   WPI_TalonSRX trigger = new WPI_TalonSRX(Constants.CANID.TRIGGER); 
   UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(Constants.Sensors.ULTRASONICSENSOR);
   LidarLitePWM lidar;
