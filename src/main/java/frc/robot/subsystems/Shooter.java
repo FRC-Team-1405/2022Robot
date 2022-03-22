@@ -53,7 +53,7 @@ public class Shooter extends SubsystemBase {
   private int adjustSpeed = 1000;
   private int idleSpeed = 5000;
   private int lowSpeed = 5000;
-  private int highSpeed = 10000;
+  private int highSpeed = 8000;
 
   private double distanceClose = 100.0;
   private double distanceFar   = 200.0;
@@ -84,7 +84,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void flywheelHighSpeed() {
-    flywheelSpeed(highSpeed);
+    flywheelSpeed(getHighSpeed());
   }
 
   public void flywheelIdleSpeed() {
