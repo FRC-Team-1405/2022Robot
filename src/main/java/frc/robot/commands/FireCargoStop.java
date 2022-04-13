@@ -9,11 +9,11 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class FireCargoStop extends InstantCommand {
-  public FireCargoStop(Shooter shooter, Intake intake) {
+  public FireCargoStop(Shooter shooter) {
     super( () -> {
       shooter.flywheelStop();
-      shooter.triggerStop();
-      intake.intakeStop();
+      shooter.triggerStop(); 
+      System.out.println("stop stop stop stop");
     } );
   }
 }

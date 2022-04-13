@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FieldPosition;
-import frc.robot.commands.AutoFireCargo;
+//import frc.robot.commands.AutoFireCargo;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.TimedTwoBallAuto;
 import frc.robot.commands.DevTestAuto;
@@ -190,11 +190,11 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kY.value)
         .whileHeld(new FireCargo(shooter, FireCargo.Goal.High))
-        .whenReleased( new FireCargoStop(shooter, intake));
+        .whenReleased( new FireCargoStop(shooter));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
         .whileHeld(new FireCargo(shooter, FireCargo.Goal.Low))
-        .whenReleased(new FireCargoStop(shooter, intake)); 
+        .whenReleased(new FireCargoStop(shooter)); 
 
   new JoystickButton(driver, XboxController.Button.kRightBumper.value)
         .whileHeld(new ParallelCommandGroup(new InstantCommand(intake::dropIntake), new IntakeCargo(intake, shooter)) )
@@ -209,11 +209,11 @@ public class RobotContainer {
   SendableChooser<Integer> autoSelector = new SendableChooser<Integer>();
 
   private void initShuffleBoard() {
-    locationSelector.setDefaultOption("None",                     0);
+    locationSelector.addOption("Far Right Tarmac facing Cargo",   0);
     locationSelector.addOption("Left Side of Left Tarmac",        1);
     locationSelector.addOption("Left Tarmac facing Cargo",        2);
     locationSelector.addOption("Right Tarmac facing Cargo",       3);
-    locationSelector.addOption("Far Right Tarmac facing Cargo",   4);
+    locationSelector.setDefaultOption("none",   4);
 
     Shuffleboard.getTab("Drive Base").add("Location", locationSelector).withWidget(BuiltInWidgets.kComboBoxChooser);
   
@@ -237,13 +237,13 @@ public class RobotContainer {
       
     hasSetLocation = true;
     
-    switch(locationSelector.getSelected()) {
-      case 0: /* Do Nothing */ break;
+    switch(locationSelector.getSelected()) { 
+      case 0: driveBase.setStartLocation(FieldPosition.Tarmac_FarRightReverse); break;
       case 1: driveBase.setStartLocation(FieldPosition.Tarmac_LeftLeft);    break;
       case 2: driveBase.setStartLocation(FieldPosition.Tarmac_LeftReverse); break;
       case 3: driveBase.setStartLocation(FieldPosition.Tarmac_RightReverse);break;
-      case 4: driveBase.setStartLocation(FieldPosition.Tarmac_FarRightReverse);break;
-      default: /* Do Nothing */ break;
+      case 4: break;
+      default: driveBase.setStartLocation(FieldPosition.Tarmac_FarRightReverse);    break;
     }
 
   } 
@@ -254,17 +254,17 @@ public class RobotContainer {
       case 1: return new FireAndBackUp(driveBase, intake, shooter, Goal.High);
       case 2: {
         if (   locationSelector.getSelected() == 2
-            || locationSelector.getSelected() == 4)
-          return new TimedTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
+            || locationSelector.getSelected() == 0)
+          return new TimedTwoBallAuto(driveBase, intake, shooter, FireCargo.Goal.High, 0.0);
         else 
-          return new TimedTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
+          return new TimedTwoBallAuto(driveBase, intake, shooter, FireCargo.Goal.High, -30.0);
       }
       case 3: {
         if (   locationSelector.getSelected() == 2
-            || locationSelector.getSelected() == 4)
-          return new DistanceTwoBallAuto(driveBase, intake, shooter, Goal.High, 0.0);
+            || locationSelector.getSelected() == 0)
+          return new DistanceTwoBallAuto(driveBase, intake, shooter, FireCargo.Goal.High, 0.0);
         else 
-          return new DistanceTwoBallAuto(driveBase, intake, shooter, Goal.High, -30.0);
+          return new DistanceTwoBallAuto(driveBase, intake, shooter, FireCargo.Goal.High, -30.0);
       }
     }
 

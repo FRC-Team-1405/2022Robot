@@ -18,9 +18,11 @@ public class FireCargo extends SequentialCommandGroup {
     Low,
     High
   }
-  
+  private Shooter shooter;
   public FireCargo(Shooter shooter, Goal goal) {
-    setName("FireCargo");
+    setName("FireCargo"); 
+
+    this.shooter = shooter; 
 
     addCommands(
       new IndexCargo(shooter),
@@ -55,9 +57,18 @@ public class FireCargo extends SequentialCommandGroup {
         // wait for the flywyeel to get up to speed
         new WaitUntilCommand( shooter::flyWheelReady ),
         // fire until flywheel speed drops
-        new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }),
-        // stop the trigger
-        new InstantCommand(shooter::triggerStop) 
-      );
+        new RunCommand(shooter::triggerFire, shooter).withInterrupt( () -> { return !shooter.flyWheelReady(); }), 
+        
+        new InstantCommand( () -> {
+          shooter.triggerStop();
+          shooter.flywheelStop();
+        },
+        shooter)
+    );
+
+  } 
+  public void end(boolean interrupted) {
+    shooter.triggerStop();
+    shooter.flywheelStop();
   }
 }

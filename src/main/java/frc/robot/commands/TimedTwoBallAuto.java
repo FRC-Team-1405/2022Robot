@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.AutoFireCargo.Goal;
+import frc.robot.commands.FireCargo.Goal;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveDrive;
@@ -38,7 +38,7 @@ public class TimedTwoBallAuto extends SequentialCommandGroup {
                    SmartDashboard.putNumber("Auto/Distance", Units.metersToInches(swerve.getDistance()));
                   }, swerve).withTimeout(3.5),
              new TurnToAngle( swerve.getPose().getRotation().getDegrees()+180+angleAdjust, swerve),
-                 new AutoFireCargo(intake, shooter, goal)
+                 new FireCargo(shooter, goal)
                 );
 
   }

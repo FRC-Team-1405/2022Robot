@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.AutoFireCargo.Goal;
+import frc.robot.commands.FireCargo.Goal; 
+import frc.robot.commands.FireCargo; 
 import frc.robot.sensor.LidarLitePWM;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -21,8 +22,8 @@ public class DistanceTwoBallAuto extends SequentialCommandGroup {
   /** Creates a new DeadReckonTwoBallAuto. */
   public DistanceTwoBallAuto(SwerveDrive swerve, Intake intake, Shooter shooter, Goal goal, double angleAdjust) {
     // Use addRequirements() here to declare subsystem dependencies.
-    double targetDistance = Units.inchesToMeters(50.0);
-    double returnDistance = Units.inchesToMeters(70.0);
+    double targetDistance = Units.inchesToMeters(40.0);
+    double returnDistance = Units.inchesToMeters(60.0);
     addRequirements(swerve);
     addRequirements(shooter);
     addRequirements(intake); 
@@ -43,9 +44,7 @@ public class DistanceTwoBallAuto extends SequentialCommandGroup {
                    SmartDashboard.putNumber("Auto/Distance", Units.metersToInches(swerve.getDistance()));
                   }, swerve).withInterrupt(() -> { return swerve.getDistance() > returnDistance;}),
              new TurnToAngle( swerve.getPose().getRotation().getDegrees()+180+angleAdjust, swerve),
-                 new AutoFireCargo(intake, shooter, goal)
+                 new FireCargo(shooter, goal)
                 );
-
   }
-
 }
