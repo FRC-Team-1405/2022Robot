@@ -67,6 +67,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter/Flywheel Error", Math.abs(flyWheel.getClosedLoopError())/500);
     SmartDashboard.putBoolean("Shooter/Distance/Close", distance < distanceClose);
     SmartDashboard.putBoolean("Shooter/Distance/Far", distance > distanceFar); 
+    SmartDashboard.putBoolean("Shooter/Distance/In Range", (Math.abs(distance - 175) < 50));
     SmartDashboard.putNumber("lidar", distance);
   }
 
@@ -176,5 +177,5 @@ public class Shooter extends SubsystemBase {
     } else {
       flyWheel.set(ControlMode.Velocity, speed);
     }
-  }
+  } 
 }

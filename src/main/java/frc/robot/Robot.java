@@ -8,11 +8,15 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+//import frc.robot.Constants.Shooter;
+import frc.robot.subsystems.Shooter;
+import frc.robot.commands.FireCargoStop;
 import frc.robot.commands.LEDManager;
 import frc.robot.lib.LEDs.BatteryLED;
 import frc.robot.lib.LEDs.LED;
 import frc.robot.lib.LEDs.UnderGlow;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake; 
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,9 +30,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private LEDManager ledManager; 
-
-
   private Intake intake; 
+  //private Shooter shooter; 
 
   /**
    * This function is run when the robot is first started up and should be used for any

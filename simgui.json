@@ -1,15 +1,37 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX[10]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[10]/Integrated Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[24]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Climber": "Subsystem",
       "/LiveWindow/Intake": "Subsystem",
       "/LiveWindow/Shooter": "Subsystem",
       "/LiveWindow/SwerveDrive": "Subsystem",
       "/LiveWindow/SwerveModule": "Subsystem",
+      "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/Talon FX [10]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [1]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [21]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [22]": "Motor Controller",
@@ -21,11 +43,20 @@
       "/LiveWindow/Ungrouped/Talon SRX [10]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [11]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [12]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [13]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [14]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [5]": "Motor Controller",
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/Auto/Auto": "String Chooser",
       "/Shuffleboard/Drive Base/Location": "String Chooser",
       "/Shuffleboard/Drive Base/SwerveDrive": "Subsystem"
+    },
+    "windows": {
+      "/LiveWindow/Shooter": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {
