@@ -11,11 +11,11 @@ import frc.robot.subsystems.Climber;
 
 public class ClimbCommand extends CommandBase {
   /** Creates a new ClimbCommand. */
-  private DoubleSupplier leftInput;
-  private DoubleSupplier rightInput;
+  private double leftInput;
+  private double rightInput;
   private Climber climber;
 
-  public ClimbCommand(DoubleSupplier leftInput, DoubleSupplier rightInput, Climber climber) {
+  public ClimbCommand(double leftInput, double rightInput, Climber climber) {
     this.leftInput = leftInput;
     this.rightInput = rightInput;
     this.climber = climber;
@@ -29,8 +29,8 @@ public class ClimbCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.left(leftInput.getAsDouble());
-    climber.right(rightInput.getAsDouble());
+    climber.left(leftInput);
+    climber.right(rightInput);
   }
 
   // Called once the command ends or is interrupted.

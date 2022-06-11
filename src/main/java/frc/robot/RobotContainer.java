@@ -59,7 +59,8 @@ public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
   private final Shooter shooter = new Shooter(lidar); 
   private final Intake intake = new Intake();
-  private final Climber climber = new Climber();
+  private final Climber climber = new Climber(); 
+  private double speedModifier = 0.4; 
   
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR); 
@@ -74,37 +75,15 @@ public class RobotContainer {
     initShuffleBoard(); 
     driveBase.setDefaultCommand(new SwerveDriveCommand(this::getXSpeed, 
                                                        this::getYSpeed, 
-                                                       this::getRotationSpeed, driveBase)); 
+                                                       this::getRotationSpeed, driveBase)); } 
 
-    climber.setDefaultCommand(new ClimbCommand(this::getLeftClimb, this::getRightClimb, climber));
-//    SmartDashboard.putData(pdp);
-    
-//    camera.setResolution(352, 240);
-//    CameraServer.startAutomaticCapture();
-  }
-
-  public double getLeftClimb(){
-    double speed = -operator.getLeftY();
-    if (Math.abs(speed) < 0.3) {
-      speed = 0.0;
-    }
-    return speed;
-  }
-
-  public double getRightClimb(){
-    double speed = -operator.getRightY();
-    if (Math.abs(speed) < 0.3) {
-      speed = 0.0;
-    } 
-    return speed;
-  }
 
   public double getXSpeed(){ 
     double finalX;
     if (Math.abs(driver.getLeftY()) <= 0.1)
       finalX = 0.0;
     else
-      finalX = driver.getLeftY() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
+      finalX = driver.getLeftY() * speedModifier;
     
     return -finalX;
   } 
@@ -114,7 +93,7 @@ public class RobotContainer {
     if (Math.abs(driver.getLeftX()) <= 0.1)
       finalY = 0.0;
     else
-      finalY = driver.getLeftX() * 0.5 * (1.0 + driver.getLeftTriggerAxis());
+      finalY = driver.getLeftX() * speedModifier;
     
     return finalY;
   } 
@@ -125,7 +104,7 @@ public class RobotContainer {
     // if (Math.abs(driver.getRightX()) <= 0.1)
     //   finalRotation = Math.abs(operator.getRightX()) <= 0.1 ? 0.0 : operator.getRightX() * .5 / (1.0 + operator.getRightTriggerAxis());
     // else
-      finalRotation = driver.getRightX() * .5 / (1.0 + driver.getRightTriggerAxis());
+      finalRotation = driver.getRightX() * speedModifier;
 
       if (Math.abs(finalRotation) < 0.1)
         finalRotation = 0.0;
@@ -181,7 +160,19 @@ public class RobotContainer {
     enableClimb.whenActive( climber::enableClimber );
   }   
 
-  private void configureDriverButtons() {
+  private void configureDriverButtons() { 
+
+    Trigger climberUp = new Trigger(() ->{return driver.getPOV() == 0;}); 
+
+    Trigger climberDown = new Trigger(() ->{return driver.getPOV() == 180;});
+
+    new JoystickButton(driver, XboxController.Button.kLeftStick.value)
+      .whenPressed(new InstantCommand(() -> {decreaseSpeed();})).whenReleased(() -> {defaultSpeed();}); 
+
+      new JoystickButton(driver, XboxController.Button.kRightStick.value)
+      .whenPressed(new InstantCommand(() -> {increaseSpeed();})).whenReleased(() -> {defaultSpeed();});
+
+
     new JoystickButton(driver, XboxController.Button.kBack.value)
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(true); }));
 
@@ -203,6 +194,10 @@ public class RobotContainer {
   new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileHeld(new InstantCommand(shooter::triggerFire))
         .whenReleased(new InstantCommand(shooter::triggerStop)); 
+
+  new JoystickButton(driver, XboxController.Button.kX.value).whenPressed(new ClimbCommand(.5, .5, climber)).whenReleased(new ClimbCommand(0, 0, climber)); 
+
+  new JoystickButton(driver, XboxController.Button.kB.value).whenPressed(new ClimbCommand(-.5, -.5, climber)).whenReleased(new ClimbCommand(0, 0, climber));     
 }
 
   private SendableChooser<Integer> locationSelector = new SendableChooser<Integer>(); 
@@ -270,4 +265,21 @@ public class RobotContainer {
 
       return new PrintCommand("Default Do Nothing");
     } 
+    public double increaseSpeed(){ 
+      System.out.println("Speed UP"); 
+     return speedModifier = 0.6; 
+     
+    } 
+
+    public double decreaseSpeed(){ 
+      speedModifier = .25;
+      System.out.println("Speed DOWN" + speedModifier);
+      return speedModifier; 
+    } 
+
+    public double defaultSpeed(){ 
+      speedModifier = 0.4; 
+      System.out.println("Speed NORMAL" + speedModifier);
+      return speedModifier; 
+    }
 }
