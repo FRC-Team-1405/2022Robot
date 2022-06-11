@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
   private int adjustSpeed = 1000;
   private int idleSpeed = 5000;
   private int lowSpeed = 5000;
-  private int highSpeed = 8000;
+  private int highSpeed = 10000;
 
   private double distanceClose = 100.0;
   private double distanceFar   = 200.0;
@@ -66,7 +66,8 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Shooter/Flywheel Error", Math.abs(flyWheel.getClosedLoopError())/500);
     SmartDashboard.putBoolean("Shooter/Distance/Close", distance < distanceClose);
-    SmartDashboard.putBoolean("Shooter/Distance/Far", distance > distanceFar);
+    SmartDashboard.putBoolean("Shooter/Distance/Far", distance > distanceFar); 
+    SmartDashboard.putNumber("lidar", distance);
   }
 
   public void flywheelStop() {
@@ -115,7 +116,7 @@ public class Shooter extends SubsystemBase {
 
   private int readyCount = 0;
   public boolean flyWheelReady() {
-    boolean atSpeed = Math.abs(flyWheel.getClosedLoopError()) < 500;
+    boolean atSpeed = Math.abs(flyWheel.getClosedLoopError()) < 300;
     if (atSpeed)
       readyCount += 1;
     else

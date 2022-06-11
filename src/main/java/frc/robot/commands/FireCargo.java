@@ -60,4 +60,5 @@ public class FireCargo extends SequentialCommandGroup {
         new InstantCommand(shooter::triggerStop) 
       );
   }
+
 }
