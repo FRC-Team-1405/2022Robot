@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.FireCommand;
+import frc.robot.commands.IdleShooter;
 import frc.robot.commands.IndexCargo;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.ThreeBallAuto_Inside;
@@ -59,7 +60,7 @@ public class RobotContainer {
   private final SwerveDrive driveBase = new SwerveDrive(); 
   private final Shooter shooter = new Shooter(lidar); 
   private final Intake intake = new Intake();
-  private final Climber climber = new Climber();
+  private final Climber climber = new Climber(); 
   
   private XboxController driver = new XboxController(Constants.Controller.DRIVER);
   private XboxController operator = new XboxController(Constants.Controller.OPERATOR); 
@@ -76,11 +77,12 @@ public class RobotContainer {
                                                        this::getYSpeed, 
                                                        this::getRotationSpeed, driveBase)); 
 
-    climber.setDefaultCommand(new ClimbCommand(this::getLeftClimb, this::getRightClimb, climber));
+    climber.setDefaultCommand(new ClimbCommand(this::getLeftClimb, this::getRightClimb, climber)); 
+   // shooter.setDefaultCommand(new IdleShooter(shooter));
 //    SmartDashboard.putData(pdp);
     
 //    camera.setResolution(352, 240);
-//    CameraServer.startAutomaticCapture();
+//    CameraServer.startAutomaticCapture(); 
   }
 
   public double getLeftClimb(){
@@ -139,12 +141,14 @@ public class RobotContainer {
     configureOperatorButtons();
   }
 
-  private void configureOperatorButtons(){
-    // InstantCommand stopCommand = new InstantCommand( shooter::flywheelStop);
-    // InstantCommand idleCommand = new InstantCommand( shooter::flywheelIdleSpeed);
-    // ConditionalCommand toggleIdleCommand = new ConditionalCommand( idleCommand, stopCommand, shooter::isStopped);
+  private void configureOperatorButtons(){    
+     new JoystickButton(operator, XboxController.Button.kA.value)
+            .whenHeld( new SequentialCommandGroup( new IndexCargo(shooter), new IdleShooter(shooter, IdleShooter.Goal.Low) ) )
+            .whenReleased( new InstantCommand( shooter::flywheelStop ) );
 
-    // new JoystickButton(operator, XboxController.Button.kB.value).whenPressed( toggleIdleCommand );
+     new JoystickButton(operator, XboxController.Button.kY.value)
+            .whenHeld( new SequentialCommandGroup( new IndexCargo(shooter), new IdleShooter(shooter, IdleShooter.Goal.High) ) )
+            .whenReleased( new InstantCommand( shooter::flywheelStop ) );
 
     Trigger upTrigger = new Trigger( () -> {
       return operator.getPOV() == 0 || operator.getPOV() == 45 || operator.getPOV() == 315;
@@ -179,18 +183,23 @@ public class RobotContainer {
         .whenReleased(new InstantCommand(shooter::triggerStop)); 
 
     enableClimb.whenActive( climber::enableClimber );
-  }   
+  }
 
-  private void configureDriverButtons() {
+  private void configureDriverButtons() { 
+    Trigger fire = new Trigger( () -> {
+      return driver.getRightTriggerAxis() > 0.75;
+    }); 
     new JoystickButton(driver, XboxController.Button.kBack.value)
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(true); }));
 
     new JoystickButton(driver, XboxController.Button.kStart.value)
       .whenPressed(new InstantCommand( () -> { driveBase.enableFieldOriented(false);}));
 
-    new JoystickButton(driver, XboxController.Button.kY.value)
-        .whileHeld(new FireCargo(shooter, FireCargo.Goal.High))
-        .whenReleased( new FireCargoStop(shooter));
+    // new JoystickButton(driver, XboxController.Button.kY.value)
+    //     .whileHeld(new FireCargo(shooter, FireCargo.Goal.High))
+    //     .whenReleased( new FireCargoStop(shooter)); 
+
+    fire.whileActiveOnce(new FireCargo(shooter, FireCargo.Goal.High));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
         .whileHeld(new FireCargo(shooter, FireCargo.Goal.Low))

@@ -27,7 +27,8 @@ public class Shooter extends SubsystemBase {
   LidarLitePWM lidar;
 
   public Shooter(LidarLitePWM lidar) {
-    this.lidar = lidar;
+    this.lidar = lidar; 
+    
     
     Preferences.initInt("Shooter/Speed/Low", lowSpeed);
     lowSpeed = Preferences.getInt("Shooter/Speed/Low", lowSpeed);
@@ -62,7 +63,9 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double distance = lidar.getDistance();
+    double distance = lidar.getDistance(); 
+
+    
 
     SmartDashboard.putNumber("Shooter/Flywheel Error", Math.abs(flyWheel.getClosedLoopError())/500);
     SmartDashboard.putBoolean("Shooter/Distance/Close", distance < distanceClose);
@@ -178,4 +181,8 @@ public class Shooter extends SubsystemBase {
       flyWheel.set(ControlMode.Velocity, speed);
     }
   } 
+
+  public boolean isFlywheelRunning(){ 
+    return flyWheel.getControlMode() == ControlMode.Velocity;
+  }
 }

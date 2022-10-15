@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -24,13 +25,13 @@ public class FireCargo extends SequentialCommandGroup {
 
     this.shooter = shooter; 
 
-    addCommands(
-      new IndexCargo(shooter),
+    addCommands( 
+      new ConditionalCommand( new IndexCargo(shooter), new PrintCommand("Skipping kickback."), shooter::isStopped),
 
       // start the flywheel
-      new ConditionalCommand(
-         new InstantCommand( shooter::flywheelLowSpeed,  shooter),
-         new InstantCommand( shooter::flywheelHighSpeed, shooter),
+      new ConditionalCommand( 
+        new InstantCommand( shooter::flywheelLowSpeed,  shooter),
+        new InstantCommand( shooter::flywheelHighSpeed, shooter),
          () -> { return goal == Goal.Low; } ),
       
         // wait for the flywyeel to get up to speed
